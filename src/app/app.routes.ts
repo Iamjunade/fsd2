@@ -11,6 +11,7 @@ import { ManifestoComponent } from './components/manifesto/manifesto.component';
 import { BlogComponent } from './components/blog/blog.component';
 import { CommunityComponent } from './components/community/community.component';
 import { ConnectComponent } from './components/connect/connect.component';
+import { DocComponent } from './components/doc/doc.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -26,5 +27,6 @@ export const routes: Routes = [
   { path: 'community', component: CommunityComponent },
   { path: 'connect', component: ConnectComponent },
   { path: 'admin', component: AdminComponent },
+  { path: 'docs', component: DocComponent },
   { path: '**', redirectTo: '' }
 ];

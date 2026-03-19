@@ -261,6 +261,7 @@ import { AuthService } from '../../services/auth.service';
               <div class="space-y-6">
                 <h4 class="text-primary font-black uppercase text-xl">Legal</h4>
                 <ul class="space-y-4 font-bold text-sm uppercase text-slate-500 list-none p-0">
+                  <li><a routerLink="/docs" class="hover:text-white transition-colors no-underline">Micro Project Docs</a></li>
                   <li><a href="#" class="hover:text-white transition-colors no-underline">Privacy Ops</a></li>
                   <li><a href="#" class="hover:text-white transition-colors no-underline">Service Terms</a></li>
                   <li><a href="#" class="hover:text-white transition-colors no-underline">Cookies</a></li>
