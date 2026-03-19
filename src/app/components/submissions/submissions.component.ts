@@ -48,11 +48,11 @@ import { RouterLink } from '@angular/router';
                     <div class="flex items-start gap-4">
                       <div class="w-12 h-12 flex-shrink-0 border-4 border-black flex items-center justify-center font-black text-xl"
                         [class.bg-green-400]="sub.status === 'Accepted'"
-                        [class.bg-red-400]="sub.status === 'Wrong Answer' || sub.status === 'Error' || sub.status === 'runtime_error' || sub.status === 'wrong'"
-                        [class.bg-yellow-400]="sub.status === 'Pending' || sub.status === 'pending'">
-                        @if (sub.status === 'Accepted' || sub.status === 'accepted') {
+                        [class.bg-red-400]="sub.status === 'Wrong Answer' || sub.status === 'Error' || sub.status === 'Runtime Error'"
+                        [class.bg-yellow-400]="sub.status === 'Pending'">
+                        @if (sub.status === 'Accepted') {
                           <mat-icon>check</mat-icon>
-                        } @else if (sub.status === 'Pending' || sub.status === 'pending') {
+                        } @else if (sub.status === 'Pending') {
                           <mat-icon>schedule</mat-icon>
                         } @else {
                           <mat-icon>close</mat-icon>
