@@ -1,0 +1,93 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    function isAdmin() {
+      return isAuthenticated() && (
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin' ||
+        request.auth.token.email == "mdks9959@gmail.com"
+      );
+    }
+    
+    function hasOnlyAllowedFields(fields) {
+      return request.resource.data.keys().hasOnly(fields);
+    }
+    
+    function isValidEmail(email) {
+      return email is string && email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
+    }
+
+    // ===============================================================
+    // Domain Validators
+    // ===============================================================
+    function isValidUser(data) {
+      return hasOnlyAllowedFields(['uid', 'username', 'email', 'role', 'createdAt']) &&
+             data.uid is string && data.uid.size() > 0 && data.uid.size() < 128 &&
+             data.username is string && data.username.size() > 0 && data.username.size() < 50 &&
+             data.email is string && isValidEmail(data.email) &&
+             data.role in ['user', 'admin'] &&
+             data.createdAt is string;
+    }
+    
+    function isValidProblem(data) {
+      return hasOnlyAllowedFields(['title', 'difficulty', 'description', 'sampleInput', 'sampleOutput', 'createdAt']) &&
+             data.title is string && data.title.size() > 0 && data.title.size() < 200 &&
+             data.difficulty in ['Easy', 'Medium', 'Hard'] &&
+             data.description is string && data.description.size() > 0 && data.description.size() < 10000 &&
+             data.sampleInput is string && data.sampleInput.size() < 5000 &&
+             data.sampleOutput is string && data.sampleOutput.size() < 5000 &&
+             data.createdAt is string;
+    }
+    
+    function isValidSubmission(data) {
+      return hasOnlyAllowedFields(['userId', 'problemId', 'code', 'language', 'status', 'executionTime', 'submittedAt']) &&
+             data.userId is string && data.userId.size() > 0 && data.userId.size() < 128 &&
+             data.problemId is string && data.problemId.size() > 0 && data.problemId.size() < 128 &&
+             data.code is string && data.code.size() > 0 && data.code.size() < 50000 &&
+             data.language in ['javascript', 'python', 'cpp'] &&
+             data.status in ['Accepted', 'Wrong Answer', 'Error', 'Pending'] &&
+             data.executionTime is number && data.executionTime >= 0 &&
+             data.submittedAt is string;
+    }
+
+    // ===============================================================
+    // Collections
+    // ===============================================================
+    match /users/{userId} {
+      allow read: if isOwner(userId) || isAdmin();
+      allow create: if isAuthenticated() && isValidUser(request.resource.data) && 
+                       request.resource.data.uid == request.auth.uid &&
+                       ((isOwner(userId) && request.resource.data.role == 'user') || isAdmin());
+      allow update: if isAuthenticated() && isValidUser(request.resource.data) &&
+                       request.resource.data.uid == resource.data.uid &&
+                       ((isOwner(userId) && request.resource.data.role == resource.data.role) || isAdmin());
+      allow delete: if isAdmin();
+    }
+    
+    match /problems/{problemId} {
+      allow read: if isAuthenticated();
+      allow create: if isAdmin() && isValidProblem(request.resource.data);
+      allow update: if isAdmin() && isValidProblem(request.resource.data);
+      allow delete: if isAdmin();
+    }
+    
+    match /submissions/{submissionId} {
+      allow read: if isAuthenticated() && (request.auth.uid == resource.data.userId || isAdmin());
+      allow create: if isAuthenticated() && isValidSubmission(request.resource.data) &&
+                       request.resource.data.userId == request.auth.uid;
+      allow update: if isAdmin() && isValidSubmission(request.resource.data);
+      allow delete: if isAdmin();
+    }
+  }
+}

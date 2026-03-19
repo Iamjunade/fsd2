@@ -1,0 +1,5 @@
+{
+  "name": "CodeLab Online Platform",
+  "description": "An online coding practice platform like HackerRank/LeetCode with problem solving, code execution simulation, and submissions.",
+  "requestFramePermissions": []
+}

@@ -1,0 +1,60 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "A user of the coding platform",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "Firebase Auth UID" },
+        "username": { "type": "string", "description": "Display name" },
+        "email": { "type": "string", "format": "email" },
+        "role": { "type": "string", "enum": ["user", "admin"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "username", "email", "role", "createdAt"]
+    },
+    "Problem": {
+      "title": "Problem",
+      "description": "A coding problem",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "difficulty": { "type": "string", "enum": ["Easy", "Medium", "Hard"] },
+        "description": { "type": "string" },
+        "sampleInput": { "type": "string" },
+        "sampleOutput": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["title", "difficulty", "description", "sampleInput", "sampleOutput", "createdAt"]
+    },
+    "Submission": {
+      "title": "Submission",
+      "description": "A user's code submission for a problem",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "problemId": { "type": "string" },
+        "code": { "type": "string" },
+        "language": { "type": "string", "enum": ["javascript", "python", "cpp"] },
+        "status": { "type": "string", "enum": ["Accepted", "Wrong Answer", "Error", "Pending"] },
+        "executionTime": { "type": "number" },
+        "submittedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "problemId", "code", "language", "status", "executionTime", "submittedAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/User" },
+      "description": "User profiles"
+    },
+    "/problems/{problemId}": {
+      "schema": { "$ref": "#/entities/Problem" },
+      "description": "Coding problems"
+    },
+    "/submissions/{submissionId}": {
+      "schema": { "$ref": "#/entities/Submission" },
+      "description": "Code submissions"
+    }
+  }
+}

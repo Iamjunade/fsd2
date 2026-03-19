@@ -1,0 +1,17 @@
+import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {RouterOutlet} from '@angular/router';
+import {NavbarComponent} from './components/navbar/navbar.component';
+
+@Component({
+  changeDetection: ChangeDetectionStrategy.Eager,
+  selector: 'app-root',
+  imports: [RouterOutlet, NavbarComponent],
+  template: `
+    <app-navbar></app-navbar>
+    <main>
+      <router-outlet></router-outlet>
+    </main>
+  `,
+  styleUrl: './app.css',
+})
+export class App {}
