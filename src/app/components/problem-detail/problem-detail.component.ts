@@ -7,6 +7,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
 import { CodeExecutionService } from '../../services/code-execution.service';
+import { SubmissionService } from '../../services/submission.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-problem-detail',
@@ -183,6 +185,8 @@ export class ProblemDetailComponent implements OnInit {
   router = inject(Router);
   problemService = inject(ProblemService);
   codeService = inject(CodeExecutionService);
+  submissionService = inject(SubmissionService);
+  authService = inject(AuthService);
 
   problem = signal<Problem | null>(null);
   loading = signal<boolean>(true);
@@ -305,26 +309,38 @@ export class ProblemDetailComponent implements OnInit {
     });
   }
 
-  onSubmitCode() {
+  async onSubmitCode() {
     if (this.executing()) return;
     
+    const user = this.authService.currentUser();
+    if (!user) {
+      this.output.set('ERROR: AUTHENTICATION_REQUIRED_FOR_SUBMISSION');
+      this.status.set('error');
+      return;
+    }
+
     this.executing.set(true);
     this.activeTab = 'stdout';
     this.output.set('');
     
-    this.codeService.submitCode(this.code, this.selectedLanguage, this.stdin).subscribe({
-      next: (res) => {
-        this.output.set(`STATUS: ${res.status}\n\nTEST_CASE_SUMMARY:\n` + 
-          res.testCases.map((tc: any) => `[TC_${tc.id}] ${tc.type}: ${tc.status} (${tc.time}ms)`).join('\n'));
-        this.status.set(res.status === 'Accepted' ? 'success' : 'error');
-        this.executing.set(false);
-      },
-      error: (err) => {
-        this.output.set('SUBMISSION_FAILED: ' + err.message);
-        this.status.set('error');
-        this.executing.set(false);
-      }
-    });
+    const problemId = this.problem()?.id || 'unknown';
+
+    try {
+      await this.submissionService.submitCode(
+        this.selectedLanguage, 
+        this.code, 
+        this.stdin, 
+        problemId, 
+        user.uid
+      );
+      
+      // Navigate to submissions page on success
+      this.router.navigate(['/submissions']);
+    } catch (err: any) {
+      this.output.set('SUBMISSION_FAILED: ' + (err.message || 'Unknown Error'));
+      this.status.set('error');
+      this.executing.set(false);
+    }
   }
 
   getThreatColor(difficulty: string) {
