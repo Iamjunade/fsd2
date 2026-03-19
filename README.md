@@ -24,8 +24,9 @@ CodeLab is a neo-brutalist "Hacker Console" platform designed for developer grow
 ## 🚀 Features
 - **Hacker Sidebar**: Unified navigation for Dashboard, Challenges, Submissions, and Leaderboard.
 - **Project Documentation**: Built-in `/docs` module with academic and structural details.
-- **Dynamic IDE**: Real-time syntax highlighting and code execution in Python, C++, Java, and JS.
-- **Vercel Optimized**: Automated routing and SSR support for seamless direct navigation.
+- **Real-time IDE**: Streamed code execution via **WebSockets (Socket.io)** for zero-latency feedback.
+- **Intelligent Caching**: In-memory result caching for lightning-fast repeated executions.
+- **Vercel Optimized**: Serverless API architecture and automated routing for seamless direct navigation.
 
 ## 💻 Local Development
 1. **Clone & Install**:
