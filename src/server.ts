@@ -14,13 +14,14 @@ const angularApp = new AngularNodeAppEngine();
 
 app.use(express.json());
 
-const JUDGE0_API_URL = 'https://judge0-ce.p.rapidapi.com';
+const ONLINE_COMPILER_API_URL = 'https://api.onlinecompiler.io';
+const API_KEY = '99b25db1595628362bb49b0a5fa60f2a';
 
-const LANGUAGE_IDS: Record<string, number> = {
-  'python': 71,
-  'cpp': 54,
-  'java': 62,
-  'javascript': 63
+const COMPILER_NAMES: Record<string, string> = {
+  'python': 'python-3.14',
+  'cpp': 'g++-15',
+  'java': 'openjdk-25',
+  'javascript': 'typescript-deno'
 };
 
 app.post('/api/compile-code', (req, res) => {
@@ -50,57 +51,38 @@ app.post('/api/compile-code', (req, res) => {
 
 app.post('/api/run-code', async (req, res) => {
   const { language, code, input } = req.body;
-  const apiKey = process.env['JUDGE0_API_KEY'];
-
-  if (!apiKey) {
-    res.json({ 
-      output: 'Error: JUDGE0_API_KEY environment variable is missing. Please configure it in the AI Studio Secrets panel to use the Judge0 API.', 
-      status: 'error' 
-    });
-    return;
-  }
 
   if (!code) {
     res.json({ output: 'Error: No code provided', status: 'error' });
     return;
   }
 
-  const languageId = LANGUAGE_IDS[language] || 63;
+  const compiler = COMPILER_NAMES[language] || 'python-3.14';
 
   try {
-    const response = await fetch(`${JUDGE0_API_URL}/submissions?base64_encoded=false&wait=true`, {
+    const response = await fetch(`${ONLINE_COMPILER_API_URL}/api/run-code-sync/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "X-RapidAPI-Key": apiKey,
-        "X-RapidAPI-Host": "judge0-ce.p.rapidapi.com"
+        "Authorization": API_KEY
       },
       body: JSON.stringify({
-        source_code: code,
-        language_id: languageId,
-        stdin: input || ""
+        compiler: compiler,
+        code: code,
+        input: input || ""
       })
     });
 
     const data = await response.json();
     
-    let output = data.stdout || '';
-    let status = 'success';
+    // onlinecompiler.io returns { output, error, status, exit_code, ... }
+    let output = data.output || '';
+    let status = data.status === 'success' ? 'success' : 'error';
     
-    if (data.stderr) {
-      output += '\n' + data.stderr;
-      status = 'error';
-    }
-    if (data.compile_output) {
-      output += '\n' + data.compile_output;
-      status = 'error';
+    if (data.error) {
+      output += (output ? '\n' : '') + data.error;
     }
     
-    if (!output && data.message) {
-        output = data.message;
-        status = 'error';
-    }
-
     res.json({ output: output.trim(), status });
   } catch (error: unknown) {
     res.json({ output: `Execution failed: ${error instanceof Error ? error.message : String(error)}`, status: 'error' });
@@ -109,47 +91,29 @@ app.post('/api/run-code', async (req, res) => {
 
 app.post('/api/submit-code', async (req, res) => {
   const { language, code, input } = req.body;
-  const apiKey = process.env['JUDGE0_API_KEY'];
-
-  if (!apiKey) {
-    res.json({ 
-      status: 'Error', 
-      executionTime: 0,
-      testCases: [{ id: 1, type: 'System Error', status: 'Missing API Key', time: 0 }]
-    });
-    return;
-  }
-
-  const languageId = LANGUAGE_IDS[language] || 63;
+  const compiler = COMPILER_NAMES[language] || 'python-3.14';
 
   try {
-    const response = await fetch(`${JUDGE0_API_URL}/submissions?base64_encoded=false&wait=true`, {
+    const response = await fetch(`${ONLINE_COMPILER_API_URL}/api/run-code-sync/`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "X-RapidAPI-Key": apiKey,
-        "X-RapidAPI-Host": "judge0-ce.p.rapidapi.com"
+        "Authorization": API_KEY
       },
       body: JSON.stringify({
-        source_code: code,
-        language_id: languageId,
-        stdin: input || ""
+        compiler: compiler,
+        code: code,
+        input: input || ""
       })
     });
 
     const data = await response.json();
     
-    let status = 'Accepted';
+    let status = data.status === 'success' ? 'Accepted' : 'Runtime Error';
     const executionTime = Math.floor(parseFloat(data.time || '0') * 1000) || 10;
     
-    if (data.stderr || data.compile_output) {
-      status = 'Runtime Error';
-    } else if (data.status?.id === 6) {
-      status = 'Compile Error';
-    } else if (data.status?.id === 5) {
-      status = 'Time Limit Exceeded';
-    } else if (data.status?.id > 3) {
-      status = 'Error';
+    if (data.error) {
+       status = 'Error';
     }
 
     // Simulate multiple test cases based on the result of the main execution
