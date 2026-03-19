@@ -269,7 +269,7 @@ import { AuthService } from '../../services/auth.service';
             </div>
           </div>
           <div class="flex flex-col md:flex-row justify-between items-end gap-8 pt-12 border-t-4 border-white/10 text-xs font-black uppercase tracking-[0.3em]">
-            <p>© 2024 CODELAB / ESTABLISHED IN THE VOID.</p>
+            <p>© 2026 CODELAB / ESTABLISHED IN THE VOID.</p>
             <div class="flex flex-col items-end gap-2 text-primary">
               <span>SYSTEM_STATUS: RAW_AND_FUNCTIONAL</span>
               <span>DESIGNED_TO_BE_DIFFERENT</span>
