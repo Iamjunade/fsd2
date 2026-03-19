@@ -106,11 +106,11 @@ import { AuthService } from '../../services/auth.service';
             <div class="flex items-center gap-3">
               <span class="material-symbols-outlined font-black">terminal</span>
               <select [(ngModel)]="selectedLanguage" (change)="onLanguageChange()" class="bg-black text-white border-2 border-primary font-black uppercase text-xs px-2 py-1 outline-none">
-                <option value="python">PYTHON_3.14</option>
-                <option value="c">GCC_C_15</option>
-                <option value="cpp">GCC_G++_15</option>
-                <option value="java">OPENJDK_25</option>
-                <option value="javascript">NODE_JS_DENO</option>
+                <option value="python">PYTHON</option>
+                <option value="c">C</option>
+                <option value="cpp">C++</option>
+                <option value="java">JAVA</option>
+                <option value="javascript">JAVASCRIPT</option>
               </select>
             </div>
             <div class="flex gap-4">
