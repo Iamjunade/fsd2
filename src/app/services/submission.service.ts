@@ -30,7 +30,7 @@ export class SubmissionService {
   loadUserSubmissions(userId: string) {
     this.loading.set(true);
     const q = query(
-      collection(db, 'submissions'), 
+      collection(db, 'codelab', 'submissions', 'items'), 
       where('userId', '==', userId),
       orderBy('submittedAt', 'desc')
     );
@@ -90,7 +90,7 @@ export class SubmissionService {
       testCases: result.testCases
     };
     
-    const docRef = await addDoc(collection(db, 'submissions'), submission);
+    const docRef = await addDoc(collection(db, 'codelab', 'submissions', 'items'), submission);
     return { id: docRef.id, ...submission };
   }
 }

@@ -28,7 +28,7 @@ export class ProblemService {
   }
 
   loadProblems() {
-    const q = query(collection(db, 'problems'), orderBy('createdAt', 'desc'));
+    const q = query(collection(db, 'codelab', 'problems', 'items'), orderBy('createdAt', 'desc'));
     onSnapshot(q, (snapshot: QuerySnapshot<DocumentData>) => {
       const loadedProblems: Problem[] = [];
       snapshot.forEach((doc) => {
@@ -47,7 +47,7 @@ export class ProblemService {
   }
 
   async getProblem(id: string): Promise<Problem | null> {
-    const docRef = doc(db, 'problems', id);
+    const docRef = doc(db, 'codelab', 'problems', 'items', id);
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
       return { id: docSnap.id, ...docSnap.data() } as Problem;
@@ -56,16 +56,16 @@ export class ProblemService {
   }
 
   async addProblem(problem: Omit<Problem, 'id'>) {
-    await addDoc(collection(db, 'problems'), problem);
+    await addDoc(collection(db, 'codelab', 'problems', 'items'), problem);
   }
 
   async updateProblem(id: string, problem: Partial<Problem>) {
-    const docRef = doc(db, 'problems', id);
+    const docRef = doc(db, 'codelab', 'problems', 'items', id);
     await updateDoc(docRef, problem);
   }
 
   async deleteProblem(id: string) {
-    const docRef = doc(db, 'problems', id);
+    const docRef = doc(db, 'codelab', 'problems', 'items', id);
     await deleteDoc(docRef);
   }
 }

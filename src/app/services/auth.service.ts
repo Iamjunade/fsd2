@@ -60,6 +60,7 @@ export class AuthService {
         username: firebaseUser.displayName || firebaseUser.email?.split('@')[0] || 'User',
         email: firebaseUser.email || '',
         role: targetRole,
+        points: 0,
         createdAt: new Date().toISOString()
       };
       try {
