@@ -38,12 +38,14 @@ import { RouterLink } from '@angular/router';
           <a routerLink="/submissions" class="flex items-center gap-4 p-4 font-black text-xs uppercase tracking-widest bg-primary text-white border-4 border-black neo-brutalist-shadow">
             <mat-icon class="text-xs">code</mat-icon> SUBMISSIONS
           </a>
-          <a href="#" class="flex items-center gap-4 p-3 font-black text-xs uppercase tracking-widest text-slate-400 hover:text-white">
+          <a routerLink="/leaderboard" class="flex items-center gap-4 p-3 font-black text-xs uppercase tracking-widest text-slate-400 hover:text-white">
             <mat-icon class="text-xs">emoji_events</mat-icon> LEADERBOARD
           </a>
-          <a href="#" class="flex items-center gap-4 p-3 font-black text-xs uppercase tracking-widest text-slate-400 hover:text-white">
-            <mat-icon class="text-xs">settings</mat-icon> SETTINGS
-          </a>
+          @if (authService.currentUser()?.role === 'admin') {
+            <a routerLink="/admin" class="flex items-center gap-4 p-3 font-black text-xs uppercase tracking-widest text-slate-400 hover:text-white">
+              <mat-icon class="text-xs">admin_panel_settings</mat-icon> ADMIN
+            </a>
+          }
         </nav>
 
         <div class="pt-6 border-t-2 border-slate-800">

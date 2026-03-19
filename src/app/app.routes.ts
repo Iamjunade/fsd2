@@ -5,6 +5,7 @@ import { ProblemListComponent } from './components/problem-list/problem-list.com
 import { ProblemDetailComponent } from './components/problem-detail/problem-detail.component';
 import { SubmissionsComponent } from './components/submissions/submissions.component';
 import { AdminComponent } from './components/admin/admin.component';
+import { LeaderboardComponent } from './components/leaderboard/leaderboard.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -13,6 +14,7 @@ export const routes: Routes = [
   { path: 'problems', component: ProblemListComponent },
   { path: 'problems/:id', component: ProblemDetailComponent },
   { path: 'submissions', component: SubmissionsComponent },
+  { path: 'leaderboard', component: LeaderboardComponent },
   { path: 'admin', component: AdminComponent },
   { path: '**', redirectTo: '' }
 ];

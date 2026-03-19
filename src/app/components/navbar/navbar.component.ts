@@ -28,6 +28,10 @@ import { AuthService } from '../../services/auth.service';
                class="text-sm font-black uppercase hover:text-primary transition-all border-b-2 border-transparent hover:border-black dark:hover:border-primary no-underline">
               Submissions
             </a>
+            <a routerLink="/leaderboard" routerLinkActive="text-primary border-primary"
+               class="text-sm font-black uppercase hover:text-primary transition-all border-b-2 border-transparent hover:border-black dark:hover:border-primary no-underline">
+              Leaderboard
+            </a>
             @if (authService.currentUser()?.role === 'admin') {
               <a routerLink="/admin" routerLinkActive="text-primary border-primary"
                  class="text-sm font-black uppercase hover:text-primary transition-all border-b-2 border-transparent hover:border-black dark:hover:border-primary no-underline">
