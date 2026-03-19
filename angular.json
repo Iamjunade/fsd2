@@ -43,7 +43,8 @@
             "outputMode": "server",
             "ssr": {
               "entry": "src/server.ts"
-            }
+            },
+            "prerender": true
           },
           "configurations": {
             "production": {
