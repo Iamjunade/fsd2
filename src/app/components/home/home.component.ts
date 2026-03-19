@@ -250,12 +250,12 @@ import { AuthService } from '../../services/auth.service';
                 </ul>
               </div>
               <div class="space-y-6">
-                <h4 class="text-primary font-black uppercase text-xl">Identity</h4>
+                <a routerLink="/identity" class="text-primary font-black uppercase text-xl no-underline hover:underline cursor-pointer">Identity</a>
                 <ul class="space-y-4 font-bold text-lg uppercase list-none p-0">
-                  <li><a href="#" class="hover:underline text-white no-underline">The Manifesto</a></li>
-                  <li><a href="#" class="hover:underline text-white no-underline">Blog</a></li>
-                  <li><a href="#" class="hover:underline text-white no-underline">Community</a></li>
-                  <li><a href="#" class="hover:underline text-white no-underline">Connect</a></li>
+                  <li><a routerLink="/manifesto" class="hover:underline text-white no-underline">The Manifesto</a></li>
+                  <li><a routerLink="/blog" class="hover:underline text-white no-underline">Blog</a></li>
+                  <li><a routerLink="/community" class="hover:underline text-white no-underline">Community</a></li>
+                  <li><a routerLink="/connect" class="hover:underline text-white no-underline">Connect</a></li>
                 </ul>
               </div>
               <div class="space-y-6">
