@@ -14,15 +14,7 @@ const angularApp = new AngularNodeAppEngine();
 
 app.use(express.json());
 
-const ONLINE_COMPILER_API_URL = 'https://api.onlinecompiler.io';
-const API_KEY = '99b25db1595628362bb49b0a5fa60f2a';
-
-const COMPILER_NAMES: Record<string, string> = {
-  'python': 'python-3.14',
-  'cpp': 'g++-15',
-  'java': 'openjdk-25',
-  'javascript': 'typescript-deno'
-};
+import { ONLINE_COMPILER_API_URL, API_KEY, COMPILER_NAMES } from './app/core/compiler-config';
 
 app.get('/api/ping', (req, res) => {
   res.json({ 
