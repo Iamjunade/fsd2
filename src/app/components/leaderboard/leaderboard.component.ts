@@ -4,57 +4,16 @@ import { LeaderboardService } from '../../services/leaderboard.service';
 import { AuthService } from '../../services/auth.service';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterLink } from '@angular/router';
+import { SidebarComponent } from '../sidebar/sidebar.component';
 
 @Component({
   selector: 'app-leaderboard',
   standalone: true,
-  imports: [CommonModule, DatePipe, MatIconModule, RouterLink],
+  imports: [CommonModule, DatePipe, MatIconModule, RouterLink, SidebarComponent],
   template: `
     <div class="h-[calc(100vh-76px)] bg-[#0a0a0a] dot-grid-bg text-white font-display overflow-hidden flex flex-col sm:flex-row">
-      <!-- Sidebar (Shared Dashboard UI) -->
-      <aside class="w-full sm:w-72 bg-[#111] border-r-4 border-black flex flex-shrink-0 flex-col p-6 z-10">
-        <div class="mb-10">
-          <div class="flex items-center gap-4 p-4 bg-black border-4 border-black mb-4 neo-brutalist-shadow-primary">
-            <div class="w-12 h-12 bg-primary border-4 border-black flex items-center justify-center">
-              <mat-icon class="text-white">person</mat-icon>
-            </div>
-            <div class="overflow-hidden">
-              <h3 class="text-xs font-black uppercase tracking-tighter text-primary truncate">{{ authService.currentUser()?.username || 'SYSTEM_GUEST' }}</h3>
-              <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">RANK: ELITE</p>
-            </div>
-          </div>
-          <button class="w-full py-3 bg-white/5 border-4 border-black text-[10px] font-black uppercase tracking-widest hover:bg-white/10 transition-colors">
-            NEW_SESSION
-          </button>
-        </div>
-
-        <nav class="flex-1 space-y-2">
-          <a routerLink="/" class="flex items-center gap-4 p-3 font-black text-xs uppercase tracking-widest text-slate-400 hover:text-white group">
-            <mat-icon class="text-xs">dashboard</mat-icon> DASHBOARD
-          </a>
-          <a routerLink="/problems" class="flex items-center gap-4 p-3 font-black text-xs uppercase tracking-widest text-slate-400 hover:text-white">
-            <mat-icon class="text-xs">bolt</mat-icon> CHALLENGES
-          </a>
-          <a routerLink="/submissions" class="flex items-center gap-4 p-3 font-black text-xs uppercase tracking-widest text-slate-400 hover:text-white">
-            <mat-icon class="text-xs">code</mat-icon> SUBMISSIONS
-          </a>
-          <a routerLink="/leaderboard" class="flex items-center gap-4 p-4 font-black text-xs uppercase tracking-widest bg-primary text-black border-4 border-black neo-brutalist-shadow">
-            <mat-icon class="text-xs">emoji_events</mat-icon> LEADERBOARD
-          </a>
-          @if (authService.currentUser()?.role === 'admin') {
-            <a routerLink="/admin" class="flex items-center gap-4 p-3 font-black text-xs uppercase tracking-widest text-slate-400 hover:text-white">
-              <mat-icon class="text-xs">admin_panel_settings</mat-icon> ADMIN
-            </a>
-          }
-        </nav>
-
-        <div class="pt-6 border-t-2 border-slate-800">
-          <div class="p-4 border-2 border-dashed border-slate-700 font-mono text-[8px] text-slate-500 leading-tight">
-            SYSTEM_ID: 0xFD2900<br>
-            SECURE_TUNNEL_ACTIVE
-          </div>
-        </div>
-      </aside>
+      <!-- Sidebar -->
+      <app-sidebar></app-sidebar>
 
       <!-- Main Content -->
       <main class="flex-1 relative overflow-y-auto p-6 sm:p-12 custom-scrollbar">
@@ -177,4 +136,5 @@ export class LeaderboardComponent implements OnInit {
   authService = inject(AuthService);
 
   ngOnInit() {}
+// Force recompile 1773924700
 }
