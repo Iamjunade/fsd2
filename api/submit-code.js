@@ -3,6 +3,7 @@ const API_KEY = '99b25db1595628362bb49b0a5fa60f2a';
 
 const COMPILER_NAMES = {
   'python': 'python-3.14',
+  'c': 'gcc-15',
   'cpp': 'g++-15',
   'java': 'openjdk-25',
   'javascript': 'typescript-deno'

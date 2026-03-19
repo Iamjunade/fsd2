@@ -107,6 +107,7 @@ import { AuthService } from '../../services/auth.service';
               <span class="material-symbols-outlined font-black">terminal</span>
               <select [(ngModel)]="selectedLanguage" (change)="onLanguageChange()" class="bg-black text-white border-2 border-primary font-black uppercase text-xs px-2 py-1 outline-none">
                 <option value="python">PYTHON_3.14</option>
+                <option value="c">GCC_C_15</option>
                 <option value="cpp">GCC_G++_15</option>
                 <option value="java">OPENJDK_25</option>
                 <option value="javascript">NODE_JS_DENO</option>
@@ -280,6 +281,9 @@ export class ProblemDetailComponent implements OnInit {
     if (p?.tags?.includes('C++')) {
       this.selectedLanguage = 'cpp';
       this.code = '#include <iostream>\n\nint main() {\n    std::cout << "Hello World";\n    return 0;\n}';
+    } else if (p?.tags?.includes('C')) {
+      this.selectedLanguage = 'c';
+      this.code = '#include <stdio.h>\n\nint main() {\n    printf("Hello World\\n");\n    return 0;\n}';
     } else {
       this.selectedLanguage = 'python';
       this.code = 'print("Hello World")';
