@@ -31,15 +31,21 @@ export class SubmissionService {
     this.loading.set(true);
     const q = query(
       collection(db, 'codelab', 'submissions', 'items'), 
-      where('userId', '==', userId),
-      orderBy('submittedAt', 'desc')
+      where('userId', '==', userId)
+      // Removed orderBy to bypass mandatory composite index requirement
     );
     
     onSnapshot(q, (snapshot: QuerySnapshot<DocumentData>) => {
-      const submissions: Submission[] = [];
+      let submissions: Submission[] = [];
       snapshot.forEach((doc) => {
         submissions.push({ id: doc.id, ...doc.data() } as Submission);
       });
+      
+      // Sort manually in JS to ensure descending order by time
+      submissions.sort((a, b) => {
+        return new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime();
+      });
+
       this.userSubmissions.set(submissions);
       this.loading.set(false);
     }, (error: FirestoreError) => {
