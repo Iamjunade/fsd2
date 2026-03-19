@@ -144,10 +144,10 @@ import { AuthService } from '../../services/auth.service';
                     class="w-full h-full bg-transparent outline-none text-primary resize-none placeholder:text-primary/30"></textarea>
                 } @else {
                   <div class="whitespace-pre-wrap lowercase text-sm">
-                    @if (output()) {
+                    @if (output() || (status() && !executing())) {
                       <div [class.text-red-500]="status() === 'error'" class="mb-4">
                         <span class="text-slate-500 uppercase">[{{ status() === 'success' ? 'SUCCESS' : 'FAILURE' }}]</span><br>
-                        {{ output() }}
+                        {{ output() || '> NO_OUTPUT_RETURNED' }}
                       </div>
                     } @else if (executing()) {
                       <div class="flex flex-col gap-1">
