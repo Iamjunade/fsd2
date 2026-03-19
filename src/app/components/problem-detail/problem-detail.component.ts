@@ -200,6 +200,9 @@ export class ProblemDetailComponent implements OnInit {
   executing = signal<boolean>(false);
   activeTab: 'stdin' | 'stdout' = 'stdout';
 
+  // Result Cache
+  private executionCache = new Map<string, { output: string, status: string }>();
+
   editorOptions = {
     theme: 'vs-dark',
     language: 'python',
@@ -291,26 +294,61 @@ export class ProblemDetailComponent implements OnInit {
   onRunCode() {
     if (this.executing()) return;
     
+    // Check Cache
+    const cacheKey = `${this.selectedLanguage}-${this.code}-${this.stdin}`;
+    const cached = this.executionCache.get(cacheKey);
+    if (cached) {
+      this.output.set(cached.output + '\n(CACHED_RESULT)');
+      this.status.set(cached.status);
+      this.activeTab = 'stdout';
+      return;
+    }
+
     this.executing.set(true);
     this.activeTab = 'stdout';
     this.output.set('');
     
-    this.codeService.runCode(this.code, this.selectedLanguage, this.stdin).subscribe({
+    // Use WebSocket for real-time output
+    this.codeService.runCodeSocket(this.code, this.selectedLanguage, this.stdin).subscribe({
       next: (res) => {
-        this.output.set(res.output);
-        this.status.set(res.status);
-        this.executing.set(false);
+        // res.output might be the full output so far or a chunk
+        if (res.output !== undefined) {
+           this.output.set(res.output);
+        }
+        
+        if (res.status) {
+           this.status.set(res.status);
+        }
+
+        if (res.finished || res.status === 'success' || res.status === 'error') {
+           this.executing.set(false);
+           // Store in cache
+           this.executionCache.set(cacheKey, { 
+             output: this.output(), 
+             status: this.status() 
+           });
+        }
       },
       error: (err) => {
-        this.output.set('CRITICAL_SYSTEM_ERROR: ' + err.message);
+        this.output.set('CRITICAL_SYSTEM_ERROR: ' + (err.message || 'Connection Failed'));
         this.status.set('error');
         this.executing.set(false);
       }
     });
+
+    // Timeout safety
+    setTimeout(() => {
+      if (this.executing()) {
+        this.output.set(this.output() + '\n[TIMEOUT_WARNING: PROLONGED_EXECUTION_DETECTED]');
+      }
+    }, 10000);
   }
 
   async onSubmitCode() {
     if (this.executing()) return;
+    
+    // Check Cache (Optional for submission, but let's keep it for logic consistency)
+    // Actually, for submissions we always want a fresh run to be safe.
     
     const user = this.authService.currentUser();
     if (!user) {
