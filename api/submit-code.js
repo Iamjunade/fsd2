@@ -2,9 +2,9 @@ const ONLINE_COMPILER_API_URL = 'https://api.onlinecompiler.io';
 const API_KEY = '99b25db1595628362bb49b0a5fa60f2a';
 
 const COMPILER_NAMES = {
-  'python': 'python-3.14',
-  'cpp': 'g++-15',
-  'java': 'openjdk-25',
+  'python': 'python-3.12',
+  'cpp': 'g++-13',
+  'java': 'openjdk-21',
   'javascript': 'typescript-deno'
 };
 

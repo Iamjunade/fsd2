@@ -104,10 +104,10 @@ import { CodeExecutionService } from '../../services/code-execution.service';
             <div class="flex items-center gap-3">
               <span class="material-symbols-outlined font-black">terminal</span>
               <select [(ngModel)]="selectedLanguage" (change)="onLanguageChange()" class="bg-black text-white border-2 border-primary font-black uppercase text-xs px-2 py-1 outline-none">
-                <option value="python">PYTHON_3.14</option>
-                <option value="cpp">GCC_G++_15</option>
-                <option value="java">OPENJDK_25</option>
-                <option value="javascript">NODE_JS_DENO</option>
+                <option value="python">PYTHON_3.12</option>
+                <option value="cpp">GCC_G++_13</option>
+                <option value="java">OPENJDK_21</option>
+                <option value="javascript">NODE_JS_20</option>
               </select>
             </div>
             <div class="flex gap-4">
@@ -141,14 +141,23 @@ import { CodeExecutionService } from '../../services/code-execution.service';
                     placeholder="ENTER_SAMPLES_HERE..."
                     class="w-full h-full bg-transparent outline-none text-primary resize-none placeholder:text-primary/30"></textarea>
                 } @else {
-                  <div class="whitespace-pre-wrap">
+                  <div class="whitespace-pre-wrap lowercase text-sm">
                     @if (output()) {
                       <div [class.text-red-500]="status() === 'error'" class="mb-4">
-                        <span class="text-slate-500">[{{ status() === 'success' ? 'SUCCESS' : 'FAILURE' }}]</span><br>
+                        <span class="text-slate-500 uppercase">[{{ status() === 'success' ? 'SUCCESS' : 'FAILURE' }}]</span><br>
                         {{ output() }}
                       </div>
+                    } @else if (executing()) {
+                      <div class="flex flex-col gap-1">
+                        <div class="text-primary animate-pulse">&gt; INITIATING_VIRTUAL_MACHINE... [OK]</div>
+                        <div class="text-primary animate-pulse">&gt; MOUNTING_COMPILER_RUNTIME... [OK]</div>
+                        <div class="text-primary animate-pulse">&gt; EXECUTING_CODE_STREAM... [PENDING]</div>
+                        <div class="mt-2 w-full h-1 bg-slate-900 border border-slate-700 overflow-hidden">
+                          <div class="h-full bg-primary animate-[loading_1.5s_infinite]"></div>
+                        </div>
+                      </div>
                     } @else {
-                      <div class="text-slate-500 animate-pulse">&gt; WAITING_FOR_EXECUTION_STREAM...</div>
+                      <div class="text-slate-500 uppercase">&gt; IDLE_STANDBY_MODE</div>
                     }
                   </div>
                 }
@@ -163,6 +172,10 @@ import { CodeExecutionService } from '../../services/code-execution.service';
     .custom-scrollbar::-webkit-scrollbar { width: 8px; }
     .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
     .custom-scrollbar::-webkit-scrollbar-thumb { background: #000; border: 2px solid #fff; }
+    @keyframes loading {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
   `]
 })
 export class ProblemDetailComponent implements OnInit {
@@ -297,7 +310,7 @@ export class ProblemDetailComponent implements OnInit {
     
     this.executing.set(true);
     this.activeTab = 'stdout';
-    this.output.set('INITIATING_CORE_SUBMISSION_VALDIATION...\n');
+    this.output.set('');
     
     this.codeService.submitCode(this.code, this.selectedLanguage, this.stdin).subscribe({
       next: (res) => {
