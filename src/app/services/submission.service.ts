@@ -30,7 +30,7 @@ export class SubmissionService {
   loadUserSubmissions(userId: string) {
     this.loading.set(true);
     const q = query(
-      collection(db, 'submissions'), 
+      collection(db, 'codelab', 'submissions', 'items'), 
       where('userId', '==', userId)
       // Removed orderBy to bypass mandatory composite index requirement
     );
@@ -90,13 +90,21 @@ export class SubmissionService {
       problemId,
       code,
       language: language as 'python' | 'cpp' | 'java' | 'javascript',
-      status: result.status,
-      executionTime: result.executionTime,
+      status: this.mapStatusForFirebase(result.status), 
+      executionTime: result.executionTime || 0,
       submittedAt: new Date().toISOString(),
-      testCases: result.testCases
+      testCases: result.testCases || []
     };
     
-    const docRef = await addDoc(collection(db, 'submissions'), submission);
+    const docRef = await addDoc(collection(db, 'codelab', 'submissions', 'items'), submission);
     return { id: docRef.id, ...submission };
+  }
+
+  private mapStatusForFirebase(apiStatus: string): any {
+    const s = (apiStatus || 'pending').toLowerCase();
+    if (s.includes('accepted')) return 'accepted';
+    if (s.includes('wrong')) return 'wrong';
+    if (s.includes('error') || s.includes('timeout')) return 'runtime_error';
+    return 'pending';
   }
 }

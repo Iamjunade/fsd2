@@ -32,7 +32,7 @@ export interface Submission {
   problemId: string;
   code: string;
   language: 'javascript' | 'python' | 'cpp' | 'java';
-  status: 'Accepted' | 'Wrong Answer' | 'Error' | 'Pending' | 'Runtime Error' | 'Time Limit Exceeded' | 'Compile Error';
+  status: 'Accepted' | 'Wrong Answer' | 'Error' | 'Pending' | 'Runtime Error' | 'Time Limit Exceeded' | 'Compile Error' | 'accepted' | 'wrong' | 'runtime_error' | 'pending';
   executionTime: number;
   submittedAt: string;
   testCases?: TestCaseResult[];

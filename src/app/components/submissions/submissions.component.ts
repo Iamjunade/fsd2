@@ -56,10 +56,10 @@ import { SidebarComponent } from '../sidebar/sidebar.component';
                         <div class="text-[10px] font-mono text-slate-500 group-hover:text-primary">{{ sub.submittedAt | date:'HH:mm:ss' }}</div>
                         <div class="font-black text-sm uppercase group-hover:text-white truncate max-w-[150px]">{{ sub.problemId }}</div>
                         <div class="px-2 py-0.5 text-[8px] font-black uppercase border-2" 
-                          [class.border-green-500]="sub.status === 'Accepted'"
-                          [class.text-green-500]="sub.status === 'Accepted'"
-                          [class.border-red-600]="sub.status !== 'Accepted'"
-                          [class.text-red-600]="sub.status !== 'Accepted'">
+                          [class.border-green-500]="sub.status.toLowerCase().includes('accepted')"
+                          [class.text-green-500]="sub.status.toLowerCase().includes('accepted')"
+                          [class.border-red-600]="!sub.status.toLowerCase().includes('accepted')"
+                          [class.text-red-600]="!sub.status.toLowerCase().includes('accepted')">
                           {{ sub.status }}
                         </div>
                       </div>
