@@ -52,7 +52,7 @@ import { AuthService } from '../../services/auth.service';
                class="px-6 py-2 text-sm font-black uppercase border-3 border-black dark:border-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-all no-underline">
               Log In
             </a>
-            <a routerLink="/login"
+            <a routerLink="/signup"
                class="px-6 py-2 text-sm font-black uppercase bg-primary text-white border-3 border-black dark:border-white shadow-brutal dark:shadow-brutal-white hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all no-underline">
               Join Now
             </a>

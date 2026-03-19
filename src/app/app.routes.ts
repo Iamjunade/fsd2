@@ -9,6 +9,7 @@ import { AdminComponent } from './components/admin/admin.component';
 export const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'login', component: LoginComponent },
+  { path: 'signup', loadComponent: () => import('./components/signup/signup.component').then(m => m.SignupComponent) },
   { path: 'problems', component: ProblemListComponent },
   { path: 'problems/:id', component: ProblemDetailComponent },
   { path: 'submissions', component: SubmissionsComponent },

@@ -5,7 +5,10 @@ import {
   GoogleAuthProvider, 
   signOut, 
   onAuthStateChanged, 
-  User as FirebaseUser 
+  User as FirebaseUser,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  updateProfile
 } from 'firebase/auth';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { User } from '../models/types';
@@ -65,6 +68,27 @@ export class AuthService {
         console.error('Failed to create user profile', e);
       }
       this.currentUser.set(newUser);
+    }
+  }
+
+  async loginWithEmail(email: string, password: string) {
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+    } catch (error) {
+      console.error('Email login error', error);
+      throw error;
+    }
+  }
+
+  async signupWithEmail(email: string, password: string, username: string) {
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      // Update display name
+      await updateProfile(userCredential.user, { displayName: username });
+      // Profile will be created by loadUserProfile listener
+    } catch (error) {
+      console.error('Signup error', error);
+      throw error;
     }
   }
 

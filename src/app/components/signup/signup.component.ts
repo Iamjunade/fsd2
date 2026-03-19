@@ -6,7 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-login',
+  selector: 'app-signup',
   standalone: true,
   imports: [MatIconModule, FormsModule, CommonModule, RouterLink],
   template: `
@@ -16,16 +16,26 @@ import { CommonModule } from '@angular/common';
           <!-- Header -->
           <div class="bg-primary px-6 py-4 border-b-4 border-black flex items-center justify-between">
             <h2 class="text-2xl font-black uppercase tracking-tighter text-black flex items-center gap-2">
-              <span class="material-symbols-outlined">key</span>
-              AUTHENTICATE_SESSION
+              <span class="material-symbols-outlined">person_add</span>
+              CREATE_ACCOUNT
             </h2>
             <span class="bg-black text-white px-2 py-0.5 text-[10px] font-black italic">v1.2.0</span>
           </div>
 
           <div class="p-8">
-            <p class="text-xs font-bold text-slate-500 uppercase mb-8 italic">// ACCESS_PROTOCOL_REQUIRED</p>
+            <p class="text-xs font-bold text-slate-500 uppercase mb-8 italic">// ESTABLISHING_IDENTITY_PROTOCOL</p>
 
-            <form (submit)="login($event)" class="space-y-6">
+            <form (submit)="signup($event)" class="space-y-6">
+              <!-- Username -->
+              <div>
+                <label class="block text-xs font-black uppercase mb-2 text-slate-700 dark:text-slate-300">USERNAME_ALIAS</label>
+                <div class="border-2 border-black bg-slate-50 dark:bg-slate-800">
+                  <input type="text" [(ngModel)]="username" name="username" required
+                    class="w-full bg-transparent border-none focus:ring-0 py-3 px-4 font-bold uppercase text-sm"
+                    placeholder="ENTER_ALIAS">
+                </div>
+              </div>
+
               <!-- Email -->
               <div>
                 <label class="block text-xs font-black uppercase mb-2 text-slate-700 dark:text-slate-300">EMAIL_ADDRESS</label>
@@ -38,10 +48,7 @@ import { CommonModule } from '@angular/common';
 
               <!-- Password -->
               <div>
-                <div class="flex justify-between mb-2">
-                  <label class="text-xs font-black uppercase text-slate-700 dark:text-slate-300">ACCESS_KEY</label>
-                  <a class="text-[10px] font-black uppercase text-primary hover:underline cursor-pointer">RESET_KEY</a>
-                </div>
+                <label class="block text-xs font-black uppercase mb-2 text-slate-700 dark:text-slate-300">ACCESS_KEY</label>
                 <div class="border-2 border-black bg-slate-50 dark:bg-slate-800">
                   <input type="password" [(ngModel)]="password" name="password" required
                     class="w-full bg-transparent border-none focus:ring-0 py-3 px-4 font-bold uppercase text-sm"
@@ -53,9 +60,9 @@ import { CommonModule } from '@angular/common';
                 <button type="submit" [disabled]="loading()"
                   class="w-full bg-primary text-black border-4 border-black py-4 font-black uppercase text-xl neo-brutalist-shadow hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all disabled:opacity-50 disabled:cursor-not-allowed">
                   @if (loading()) {
-                    VERIFYING...
+                    EXECUTING...
                   } @else {
-                    INITIATE_LOGIN
+                    INITIATE_SIGNUP
                   }
                 </button>
 
@@ -68,15 +75,15 @@ import { CommonModule } from '@angular/common';
                 <button type="button" (click)="loginWithGoogle()"
                   class="w-full bg-white dark:bg-slate-800 text-black dark:text-white border-2 border-black py-3 font-black uppercase text-sm flex items-center justify-center gap-3 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
                   <img src="https://www.google.com/favicon.ico" class="size-4" alt="Google">
-                  LOGIN_WITH_GOOGLE
+                  SIGNUP_WITH_GOOGLE
                 </button>
               </div>
             </form>
 
             <div class="mt-8 pt-6 border-t-2 border-black/10 dark:border-white/10 text-center">
               <p class="text-xs font-bold text-slate-500 uppercase">
-                NO_IDENTITY_FOUND? 
-                <a routerLink="/signup" class="text-primary hover:underline ml-1">ESTABLISH_NEW_ALIAS</a>
+                ALREADY_HAVE_IDENTITY? 
+                <a routerLink="/login" class="text-primary hover:underline ml-1">RETURN_TO_LOGIN</a>
               </p>
             </div>
           </div>
@@ -85,23 +92,24 @@ import { CommonModule } from '@angular/common';
     </div>
   `
 })
-export class LoginComponent {
+export class SignupComponent {
   authService = inject(AuthService);
   router = inject(Router);
 
+  username = '';
   email = '';
   password = '';
   loading = signal(false);
 
-  async login(event: Event) {
+  async signup(event: Event) {
     event.preventDefault();
-    if (this.email && this.password) {
+    if (this.email && this.password && this.username) {
       this.loading.set(true);
       try {
-        await this.authService.loginWithEmail(this.email, this.password);
+        await this.authService.signupWithEmail(this.email, this.password, this.username);
         this.router.navigate(['/problems']);
       } catch (error) {
-        console.error('Login failed', error);
+        console.error('Signup failed', error);
       } finally {
         this.loading.set(false);
       }
