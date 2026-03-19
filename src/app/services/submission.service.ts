@@ -30,7 +30,7 @@ export class SubmissionService {
   loadUserSubmissions(userId: string) {
     this.loading.set(true);
     const q = query(
-      collection(db, 'codelab', 'submissions', 'items'), 
+      collection(db, 'submissions'), 
       where('userId', '==', userId)
       // Removed orderBy to bypass mandatory composite index requirement
     );
@@ -96,7 +96,7 @@ export class SubmissionService {
       testCases: result.testCases
     };
     
-    const docRef = await addDoc(collection(db, 'codelab', 'submissions', 'items'), submission);
+    const docRef = await addDoc(collection(db, 'submissions'), submission);
     return { id: docRef.id, ...submission };
   }
 }
