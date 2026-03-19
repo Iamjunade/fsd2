@@ -23,26 +23,9 @@ import { AuthService } from '../../services/auth.service';
       </div>
 
       <nav class="flex-1 space-y-1">
-        <!-- New Navigation Hierarchy -->
-        <a routerLink="/identity" routerLinkActive="bg-primary text-black neo-brutalist-shadow border-primary" [routerLinkActiveOptions]="{exact: true}"
+        <a routerLink="/" routerLinkActive="bg-primary text-black neo-brutalist-shadow border-primary" [routerLinkActiveOptions]="{exact: true}"
            class="flex items-center gap-4 p-4 font-black text-xs uppercase tracking-widest text-slate-400 hover:text-white border-4 border-transparent transition-all">
-          <mat-icon class="text-xs">fingerprint</mat-icon> IDENTITY
-        </a>
-        <a routerLink="/manifesto" routerLinkActive="bg-primary text-black neo-brutalist-shadow border-primary"
-           class="flex items-center gap-4 p-4 font-black text-xs uppercase tracking-widest text-slate-400 hover:text-white border-4 border-transparent transition-all">
-          <mat-icon class="text-xs">description</mat-icon> THE MANIFESTO
-        </a>
-        <a routerLink="/blog" routerLinkActive="bg-primary text-black neo-brutalist-shadow border-primary"
-           class="flex items-center gap-4 p-4 font-black text-xs uppercase tracking-widest text-slate-400 hover:text-white border-4 border-transparent transition-all">
-          <mat-icon class="text-xs">history_edu</mat-icon> BLOG
-        </a>
-        <a routerLink="/community" routerLinkActive="bg-primary text-black neo-brutalist-shadow border-primary"
-           class="flex items-center gap-4 p-4 font-black text-xs uppercase tracking-widest text-slate-400 hover:text-white border-4 border-transparent transition-all">
-          <mat-icon class="text-xs">groups</mat-icon> COMMUNITY
-        </a>
-        <a routerLink="/connect" routerLinkActive="bg-primary text-black neo-brutalist-shadow border-primary"
-           class="flex items-center gap-4 p-4 font-black text-xs uppercase tracking-widest text-slate-400 hover:text-white border-4 border-transparent transition-all">
-          <mat-icon class="text-xs">alternate_email</mat-icon> CONNECT
+          <mat-icon class="text-xs">grid_view</mat-icon> DASHBOARD
         </a>
 
         <div class="my-6 border-t-2 border-slate-800 pt-4 px-2">
