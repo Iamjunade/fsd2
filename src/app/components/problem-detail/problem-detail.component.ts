@@ -104,10 +104,10 @@ import { CodeExecutionService } from '../../services/code-execution.service';
             <div class="flex items-center gap-3">
               <span class="material-symbols-outlined font-black">terminal</span>
               <select [(ngModel)]="selectedLanguage" (change)="onLanguageChange()" class="bg-black text-white border-2 border-primary font-black uppercase text-xs px-2 py-1 outline-none">
-                <option value="python">PYTHON_3.12</option>
-                <option value="cpp">GCC_G++_13</option>
-                <option value="java">OPENJDK_21</option>
-                <option value="javascript">NODE_JS_20</option>
+                <option value="python">PYTHON_3.14</option>
+                <option value="cpp">GCC_G++_15</option>
+                <option value="java">OPENJDK_25</option>
+                <option value="javascript">NODE_JS_DENO</option>
               </select>
             </div>
             <div class="flex gap-4">
