@@ -24,6 +24,14 @@ const COMPILER_NAMES: Record<string, string> = {
   'javascript': 'typescript-deno'
 };
 
+app.get('/api/ping', (req, res) => {
+  res.json({ 
+    status: 'ok', 
+    message: 'CodeLab Backend Ready',
+    timestamp: new Date().toISOString()
+  });
+});
+
 app.post('/api/compile-code', (req, res) => {
   const { language, code } = req.body;
   
