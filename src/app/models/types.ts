@@ -14,6 +14,8 @@ export interface Problem {
   sampleInput: string;
   sampleOutput: string;
   createdAt: string;
+  tags?: string[];
+  subsystem?: string;
 }
 
 export interface TestCaseResult {

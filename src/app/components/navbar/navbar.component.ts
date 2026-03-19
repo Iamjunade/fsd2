@@ -21,7 +21,7 @@ import { AuthService } from '../../services/auth.service';
         <nav class="hidden lg:flex items-center gap-8">
           <a routerLink="/problems" routerLinkActive="text-primary border-primary"
              class="text-sm font-black uppercase hover:text-primary transition-all border-b-2 border-transparent hover:border-black dark:hover:border-primary no-underline">
-            Problems
+            Challenges
           </a>
           @if (authService.currentUser()) {
             <a routerLink="/submissions" routerLinkActive="text-primary border-primary"

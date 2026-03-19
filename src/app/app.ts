@@ -3,7 +3,7 @@ import {RouterOutlet} from '@angular/router';
 import {NavbarComponent} from './components/navbar/navbar.component';
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.Eager,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-root',
   imports: [RouterOutlet, NavbarComponent],
   template: `

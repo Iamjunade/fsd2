@@ -1,7 +1,7 @@
 /* You can add global styles to this file, and also import other style files */
 @import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
+@import url('https://fonts.googleapis.com/symbols-outlined:wght,FILL@100..700,0..1&display=swap');
 @import "tailwindcss";
 
 @theme {
@@ -14,6 +14,17 @@
   --shadow-brutal: 8px 8px 0px 0px #000000;
   --shadow-brutal-purple: 8px 8px 0px 0px #b90df2;
   --shadow-brutal-white: 8px 8px 0px 0px #ffffff;
+}
+
+.neo-brutalist-shadow {
+    box-shadow: 6px 6px 0px 0px rgba(0, 0, 0, 1);
+}
+.neo-brutalist-shadow-primary {
+    box-shadow: 4px 4px 0px 0px #b90df2;
+}
+.terminal-grid {
+    background-size: 20px 20px;
+    background-image: radial-gradient(circle, rgba(185, 13, 242, 0.1) 1px, transparent 1px);
 }
 
 .neo-border { border: 3px solid black; }

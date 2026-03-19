@@ -3,86 +3,165 @@ import { RouterLink } from '@angular/router';
 import { ProblemService } from '../../services/problem.service';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-problem-list',
   standalone: true,
-  imports: [RouterLink, MatIconModule, FormsModule],
+  imports: [RouterLink, MatIconModule, FormsModule, CommonModule],
   template: `
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div class="sm:flex sm:items-center justify-between">
-        <div class="sm:flex-auto">
-          <h1 class="text-3xl font-semibold text-gray-900">Coding Problems</h1>
-          <p class="mt-2 text-sm text-gray-700">A list of all available coding problems to practice.</p>
+    <div class="min-h-screen terminal-grid bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display">
+      <main class="max-w-7xl mx-auto px-6 md:px-10 py-10 w-full">
+        <div class="mb-12">
+          <div class="inline-block bg-primary text-black px-3 py-1 text-xs font-black uppercase mb-4 border-2 border-black">SYSTEM_STATUS: ACTIVE</div>
+          <h1 class="text-6xl md:text-8xl font-black leading-none tracking-tighter uppercase mb-2 break-all">
+            BRUTAL<br/><span class="text-primary italic">CHALLENGES</span>
+          </h1>
+          <p class="text-lg font-bold text-slate-500 dark:text-slate-400 max-w-2xl uppercase">
+            // EXECUTE OR TERMINATE. HIGH-CONTRAST COMPUTING FOR THE ELITE OVERLORDS. NO PACKET LEFT UNCHECKED.
+          </p>
         </div>
-        <div class="mt-4 sm:mt-0 flex gap-4">
-          <div class="relative rounded-md shadow-sm">
-            <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-              <mat-icon class="text-gray-400 text-sm" style="width: 18px; height: 18px; font-size: 18px;">search</mat-icon>
+
+        <div class="flex flex-col lg:flex-row gap-10">
+          <aside class="w-full lg:w-72 shrink-0">
+            <div class="border-4 border-black bg-slate-100 dark:bg-slate-900 p-6 neo-brutalist-shadow">
+              <h3 class="font-black uppercase text-xl mb-6 border-b-2 border-black pb-2 flex items-center justify-between">
+                MANIFEST
+                <span class="material-symbols-outlined">filter_list</span>
+              </h3>
+              <div class="space-y-6">
+                <!-- Search -->
+                <div>
+                   <label class="block text-xs font-black uppercase mb-3 text-slate-500">SEARCH_MANIFEST</label>
+                   <div class="flex items-stretch border-2 border-black bg-white dark:bg-slate-800">
+                      <input type="text" [ngModel]="searchQuery()" (ngModelChange)="searchQuery.set($event)" 
+                        class="w-full bg-transparent border-none focus:ring-0 text-sm font-bold uppercase placeholder:text-slate-500 py-2 px-3" 
+                        placeholder="ENTER_QUERY">
+                   </div>
+                </div>
+
+                <!-- Subsystem Filter -->
+                <div>
+                  <label class="block text-xs font-black uppercase mb-3 text-slate-500">SUBSYSTEM_TYPE</label>
+                  <div class="space-y-2">
+                    <button (click)="subsystemFilter.set('All')" 
+                      [ngClass]="subsystemFilter() === 'All' ? 'bg-primary text-black' : 'hover:bg-primary/20'"
+                      class="w-full text-left px-3 py-2 border-2 border-black font-black text-sm uppercase transition-colors">
+                      ALL_SYSTEMS
+                    </button>
+                    <button (click)="subsystemFilter.set('ALGO_HACK')" 
+                      [ngClass]="subsystemFilter() === 'ALGO_HACK' ? 'bg-primary text-black' : 'hover:bg-primary/20'"
+                      class="w-full text-left px-3 py-2 border-2 border-black font-black text-sm uppercase transition-colors">
+                      ALGO_HACK
+                    </button>
+                    <button (click)="subsystemFilter.set('NET_PROTOCOL')" 
+                      [ngClass]="subsystemFilter() === 'NET_PROTOCOL' ? 'bg-primary text-black' : 'hover:bg-primary/20'"
+                      class="w-full text-left px-3 py-2 border-2 border-black font-black text-sm uppercase transition-colors">
+                      NET_PROTOCOL
+                    </button>
+                    <button (click)="subsystemFilter.set('LOW_LEVEL_C')" 
+                      [ngClass]="subsystemFilter() === 'LOW_LEVEL_C' ? 'bg-primary text-black' : 'hover:bg-primary/20'"
+                      class="w-full text-left px-3 py-2 border-2 border-black font-black text-sm uppercase transition-colors">
+                      LOW_LEVEL_C
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Threat Level Filter -->
+                <div>
+                  <label class="block text-xs font-black uppercase mb-3 text-slate-500">THREAT_LEVEL</label>
+                  <div class="grid grid-cols-2 gap-2">
+                    <button (click)="difficultyFilter.set('Easy')" 
+                      [ngClass]="difficultyFilter() === 'Easy' ? 'bg-green-500 text-black' : 'hover:bg-green-500/20'"
+                      class="border-2 border-black py-2 font-black text-xs uppercase transition-colors">STABLE</button>
+                    <button (click)="difficultyFilter.set('Medium')" 
+                      [ngClass]="difficultyFilter() === 'Medium' ? 'bg-yellow-500 text-black' : 'hover:bg-yellow-500/20'"
+                      class="border-2 border-black py-2 font-black text-xs uppercase transition-colors">UNSTABLE</button>
+                    <button (click)="difficultyFilter.set('Hard')" 
+                      [ngClass]="difficultyFilter() === 'Hard' ? 'bg-red-600 text-white' : 'hover:bg-red-600/20'"
+                      class="border-2 border-black py-2 font-black text-xs uppercase transition-colors col-span-2">HARDCORE</button>
+                    <button (click)="difficultyFilter.set('All')" 
+                      [ngClass]="difficultyFilter() === 'All' ? 'bg-slate-500 text-white' : 'hover:bg-slate-500/20'"
+                      class="border-2 border-black py-1 font-black text-[10px] uppercase transition-colors col-span-2">CLEAR_FILTER</button>
+                  </div>
+                </div>
+
+                <!-- Terminal info box -->
+                <div class="pt-4">
+                  <div class="bg-black text-primary p-4 font-mono text-xs leading-tight border-2 border-primary/50">
+                    <p>&gt; uptime: 99.9%</p>
+                    <p>&gt; nodes: active</p>
+                    <p>&gt; session: root</p>
+                    <p class="animate-pulse">_</p>
+                  </div>
+                </div>
+              </div>
             </div>
-            <input type="text" [ngModel]="searchQuery()" (ngModelChange)="searchQuery.set($event)" class="block w-full rounded-md border-0 py-1.5 pl-10 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-emerald-600 sm:text-sm sm:leading-6" placeholder="Search problems...">
-          </div>
-          <select [ngModel]="difficultyFilter()" (ngModelChange)="difficultyFilter.set($event)" class="block rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-emerald-600 sm:text-sm sm:leading-6">
-            <option value="All">All Difficulties</option>
-            <option value="Easy">Easy</option>
-            <option value="Medium">Medium</option>
-            <option value="Hard">Hard</option>
-          </select>
-        </div>
-      </div>
-      
-      <div class="mt-8 flex flex-col">
-        <div class="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
-          <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
-            <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
-              <table class="min-w-full divide-y divide-gray-300">
-                <thead class="bg-gray-50">
-                  <tr>
-                    <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Title</th>
-                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Difficulty</th>
-                    <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6">
-                      <span class="sr-only">Solve</span>
-                    </th>
-                  </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-200 bg-white">
-                  @if (problemService.loading()) {
-                    <tr>
-                      <td colspan="3" class="py-4 text-center text-sm text-gray-500">Loading problems...</td>
-                    </tr>
-                  } @else if (filteredProblems().length === 0) {
-                    <tr>
-                      <td colspan="3" class="py-4 text-center text-sm text-gray-500">No problems match your criteria.</td>
-                    </tr>
-                  } @else {
-                    @for (problem of filteredProblems(); track problem.id) {
-                      <tr>
-                        <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-6">{{ problem.title }}</td>
-                        <td class="whitespace-nowrap px-3 py-4 text-sm">
-                          <span class="inline-flex rounded-full px-2 text-xs font-semibold leading-5"
-                            [class.bg-green-100]="problem.difficulty === 'Easy'"
-                            [class.text-green-800]="problem.difficulty === 'Easy'"
-                            [class.bg-yellow-100]="problem.difficulty === 'Medium'"
-                            [class.text-yellow-800]="problem.difficulty === 'Medium'"
-                            [class.bg-red-100]="problem.difficulty === 'Hard'"
-                            [class.text-red-800]="problem.difficulty === 'Hard'">
-                            {{ problem.difficulty }}
-                          </span>
-                        </td>
-                        <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                          <a [routerLink]="['/problems', problem.id]" class="text-emerald-600 hover:text-emerald-900 flex items-center justify-end gap-1">
-                            Solve <mat-icon class="text-sm" style="width: 18px; height: 18px; font-size: 18px;">arrow_forward</mat-icon>
-                          </a>
-                        </td>
-                      </tr>
-                    }
+          </aside>
+
+          <div class="flex-1">
+             @if (problemService.loading()) {
+                <div class="flex items-center justify-center p-20">
+                   <div class="text-4xl font-black uppercase animate-pulse">LOADING_DATA...</div>
+                </div>
+             } @else if (filteredProblems().length === 0) {
+                <div class="border-4 border-black border-dashed p-20 text-center">
+                   <h3 class="text-2xl font-black uppercase">NO_TARGETS_FOUND</h3>
+                   <p class="text-slate-500 font-bold uppercase mt-2">ADJUST FILTER PARAMS OR SEARCH QUERY</p>
+                </div>
+             } @else {
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  @for (problem of filteredProblems(); track problem.id; let i = $index) {
+                    <div class="border-4 border-black bg-white dark:bg-slate-900 overflow-hidden neo-brutalist-shadow flex flex-col relative transition-transform hover:scale-[1.02]"
+                        [ngClass]="i % 2 === 0 ? 'rotate-1' : '-rotate-1'">
+                      
+                      <!-- Header -->
+                      <div class="px-4 py-2 font-black uppercase text-sm border-b-4 border-black flex justify-between items-center"
+                        [ngClass]="getThreatColor(problem.difficulty)">
+                        <span>THREAT: {{ getThreatLabel(problem.difficulty) }}</span>
+                        <span class="material-symbols-outlined text-sm">{{ getThreatIcon(problem.difficulty) }}</span>
+                      </div>
+
+                      <!-- Content -->
+                      <div class="p-6 flex-1">
+                        <div class="flex justify-between items-start mb-4">
+                          <h2 class="text-3xl font-black uppercase leading-none tracking-tighter">{{ problem.title }}</h2>
+                          <span class="bg-black text-white px-2 py-1 text-[10px] font-black italic">ID: {{ problem.id?.substring(0, 6) || '0x????' }}</span>
+                        </div>
+                        <p class="font-bold text-sm mb-6 uppercase leading-snug">{{ problem.description }}</p>
+                        
+                        <div class="flex flex-wrap gap-2 mb-8">
+                          @if (problem.tags && problem.tags.length > 0) {
+                            @for (tag of problem.tags; track tag) {
+                              <span class="border-2 border-black px-2 py-0.5 text-[10px] font-black uppercase bg-slate-200 dark:bg-slate-800">{{ tag }}</span>
+                            }
+                          } @else {
+                            <span class="border-2 border-black px-2 py-0.5 text-[10px] font-black uppercase bg-slate-200 dark:bg-slate-800">UNLABELED</span>
+                          }
+                        </div>
+                      </div>
+
+                      <!-- Footer/Action -->
+                      <div class="p-6 pt-0 mt-auto">
+                        <button [routerLink]="['/problems', problem.id]" 
+                          class="w-full bg-primary text-black border-4 border-black py-4 font-black uppercase text-xl neo-brutalist-shadow hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all active:translate-x-1 active:translate-y-1 active:shadow-none">
+                          INITIATE_HACK
+                        </button>
+                      </div>
+                    </div>
                   }
-                </tbody>
-              </table>
-            </div>
+
+                  <!-- Propose Card -->
+                  <div class="border-4 border-black bg-primary/10 border-dashed dark:bg-slate-900/50 overflow-hidden flex flex-col relative justify-center items-center p-10 text-center min-h-[300px]">
+                    <span class="material-symbols-outlined text-6xl mb-4 text-primary">add_box</span>
+                    <h3 class="text-2xl font-black uppercase">PROPOSE_LOG</h3>
+                    <p class="text-xs font-bold uppercase mt-2">REQUEST NEW CHALLENGE VECTOR FROM COMMAND</p>
+                  </div>
+                </div>
+             }
           </div>
         </div>
-      </div>
+      </main>
     </div>
   `
 })
@@ -91,19 +170,93 @@ export class ProblemListComponent {
   
   searchQuery = signal('');
   difficultyFilter = signal('All');
+  subsystemFilter = signal('All');
   
   filteredProblems = computed(() => {
     let problems = this.problemService.problems();
     
+    // Add mock data if empty for UI verification
+    if (problems.length === 0 && !this.problemService.loading()) {
+      problems = [
+        {
+          id: '0x8842',
+          title: 'Memory_Void',
+          difficulty: 'Hard',
+          description: 'Optimize a raw memory allocator to handle fragmented heaps under 50ms latency.',
+          tags: ['C++', 'SYSTEMS', 'LOW_LEVEL'],
+          subsystem: 'LOW_LEVEL_C',
+          createdAt: new Date().toISOString(),
+          sampleInput: '',
+          sampleOutput: ''
+        },
+        {
+          id: '0x4421',
+          title: 'Packet_Sieve',
+          difficulty: 'Easy',
+          description: 'Filter high-throughput network traffic using SIMD instructions for maximum velocity.',
+          tags: ['RUST', 'NETWORK'],
+          subsystem: 'NET_PROTOCOL',
+          createdAt: new Date().toISOString(),
+          sampleInput: '',
+          sampleOutput: ''
+        },
+        {
+          id: '0x1102',
+          title: 'Crypto_Grind',
+          difficulty: 'Medium',
+          description: 'Decrypt a custom XOR-ciphered stream with 1024-bit rotating keys in parallel.',
+          tags: ['SECURITY', 'MATH'],
+          subsystem: 'ALGO_HACK',
+          createdAt: new Date().toISOString(),
+          sampleInput: '',
+          sampleOutput: ''
+        }
+      ];
+    }
+
     if (this.difficultyFilter() !== 'All') {
       problems = problems.filter(p => p.difficulty === this.difficultyFilter());
+    }
+
+    if (this.subsystemFilter() !== 'All') {
+      problems = problems.filter(p => p.subsystem === this.subsystemFilter());
     }
     
     if (this.searchQuery().trim() !== '') {
       const query = this.searchQuery().toLowerCase();
-      problems = problems.filter(p => p.title.toLowerCase().includes(query));
+      problems = problems.filter(p => 
+        p.title.toLowerCase().includes(query) || 
+        p.description.toLowerCase().includes(query)
+      );
     }
     
     return problems;
   });
+
+  getThreatColor(difficulty: string) {
+    switch (difficulty) {
+      case 'Easy': return 'bg-green-500 text-black';
+      case 'Medium': return 'bg-yellow-500 text-black';
+      case 'Hard': return 'bg-red-600 text-white';
+      default: return 'bg-slate-500 text-white';
+    }
+  }
+
+  getThreatLabel(difficulty: string) {
+    switch (difficulty) {
+      case 'Easy': return 'STABLE';
+      case 'Medium': return 'UNSTABLE';
+      case 'Hard': return 'HARDCORE';
+      default: return 'UNKNOWN';
+    }
+  }
+
+  getThreatIcon(difficulty: string) {
+    switch (difficulty) {
+      case 'Easy': return 'check_circle';
+      case 'Medium': return 'bolt';
+      case 'Hard': return 'warning';
+      default: return 'help';
+    }
+  }
 }
