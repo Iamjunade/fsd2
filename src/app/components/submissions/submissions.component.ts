@@ -10,73 +10,96 @@ import { RouterLink } from '@angular/router';
   standalone: true,
   imports: [DatePipe, MatIconModule, RouterLink],
   template: `
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div class="sm:flex sm:items-center">
-        <div class="sm:flex-auto">
-          <h1 class="text-3xl font-semibold text-gray-900">My Submissions</h1>
-          <p class="mt-2 text-sm text-gray-700">A history of all your code submissions across problems.</p>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <!-- Terminal Header -->
+      <div class="bg-black border-4 border-black p-3 mb-8 flex items-center justify-between neo-brutalist-shadow">
+        <div class="flex items-center gap-3">
+          <div class="flex gap-1.5">
+            <div class="w-3 h-3 rounded-full bg-red-500 border border-black"></div>
+            <div class="w-3 h-3 rounded-full bg-yellow-500 border border-black"></div>
+            <div class="w-3 h-3 rounded-full bg-green-500 border border-black"></div>
+          </div>
+          <span class="text-white font-black text-xs tracking-tighter uppercase">SESSION_HISTORY_v2.0 // USER:{{ authService.currentUser()?.username }}</span>
         </div>
+        <div class="text-[10px] text-slate-500 font-mono hidden sm:block">BAUD_RATE: 9600 // STATUS: ENCRYPTED</div>
       </div>
-      
-      <div class="mt-8 flex flex-col">
-        <div class="-my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
-          <div class="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
-            <div class="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
-              <table class="min-w-full divide-y divide-gray-300">
-                <thead class="bg-gray-50">
-                  <tr>
-                    <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Time Submitted</th>
-                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Problem ID</th>
-                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Status</th>
-                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Runtime</th>
-                    <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Language</th>
-                  </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-200 bg-white">
-                  @if (submissionService.loading()) {
-                    <tr>
-                      <td colspan="5" class="py-4 text-center text-sm text-gray-500">Loading submissions...</td>
-                    </tr>
-                  } @else if (submissionService.userSubmissions().length === 0) {
-                    <tr>
-                      <td colspan="5" class="py-4 text-center text-sm text-gray-500">You haven't made any submissions yet.</td>
-                    </tr>
-                  } @else {
-                    @for (sub of submissionService.userSubmissions(); track sub.id) {
-                      <tr>
-                        <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm text-gray-500 sm:pl-6">
-                          {{ sub.submittedAt | date:'medium' }}
-                        </td>
-                        <td class="whitespace-nowrap px-3 py-4 text-sm font-medium text-emerald-600">
-                          <a [routerLink]="['/problems', sub.problemId]">{{ sub.problemId }}</a>
-                        </td>
-                        <td class="whitespace-nowrap px-3 py-4 text-sm font-medium">
-                          <span class="inline-flex rounded-full px-2 text-xs font-semibold leading-5"
-                            [class.bg-green-100]="sub.status === 'Accepted'"
-                            [class.text-green-800]="sub.status === 'Accepted'"
-                            [class.bg-red-100]="sub.status === 'Wrong Answer' || sub.status === 'Error'"
-                            [class.text-red-800]="sub.status === 'Wrong Answer' || sub.status === 'Error'"
-                            [class.bg-gray-100]="sub.status === 'Pending'"
-                            [class.text-gray-800]="sub.status === 'Pending'">
-                            {{ sub.status }}
+
+      <div class="space-y-6">
+        @if (submissionService.loading()) {
+          <div class="p-12 text-center border-4 border-black border-dashed">
+            <div class="inline-block animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full mb-4"></div>
+            <p class="font-black uppercase tracking-widest text-sm">RETRIEVING_DATA_PACKETS...</p>
+          </div>
+        } @else if (submissionService.userSubmissions().length === 0) {
+          <div class="bg-white border-4 border-black p-12 text-center neo-brutalist-shadow">
+            <mat-icon class="text-6xl h-auto w-auto mb-4 text-slate-300">history</mat-icon>
+            <h3 class="text-xl font-black uppercase mb-2">NO_RECORD_FOUND</h3>
+            <p class="text-slate-500 font-medium">Initial submission sequence not yet established.</p>
+            <button routerLink="/problems" class="mt-6 px-8 py-3 bg-primary text-white border-4 border-black font-black uppercase tracking-tighter hover:translate-x-1 hover:-translate-y-1 transition-transform neo-brutalist-shadow-primary">
+              INITIATE_FIRST_HACK
+            </button>
+          </div>
+        } @else {
+          <div class="grid gap-6">
+            @for (sub of submissionService.userSubmissions(); track sub.id) {
+              <div class="bg-white border-4 border-black neo-brutalist-shadow overflow-hidden group hover:-translate-y-1 transition-transform">
+                <div class="p-6">
+                  <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div class="flex items-start gap-4">
+                      <div class="w-12 h-12 flex-shrink-0 border-4 border-black flex items-center justify-center font-black text-xl"
+                        [class.bg-green-400]="sub.status === 'Accepted'"
+                        [class.bg-red-400]="sub.status === 'Wrong Answer' || sub.status === 'Error' || sub.status === 'runtime_error' || sub.status === 'wrong'"
+                        [class.bg-yellow-400]="sub.status === 'Pending' || sub.status === 'pending'">
+                        @if (sub.status === 'Accepted' || sub.status === 'accepted') {
+                          <mat-icon>check</mat-icon>
+                        } @else if (sub.status === 'Pending' || sub.status === 'pending') {
+                          <mat-icon>schedule</mat-icon>
+                        } @else {
+                          <mat-icon>close</mat-icon>
+                        }
+                      </div>
+                      
+                      <div>
+                        <div class="flex items-center gap-2 mb-1">
+                          <span class="text-[10px] font-black uppercase tracking-tighter text-slate-500">PROBLEM_NODE:</span>
+                          <a [routerLink]="['/problems', sub.problemId]" class="font-black text-primary hover:underline uppercase tracking-tighter">
+                            {{ sub.problemId }}
+                          </a>
+                        </div>
+                        <h3 class="text-lg font-black uppercase leading-none mb-2">
+                          {{ sub.status }}
+                        </h3>
+                        <div class="flex flex-wrap gap-3 text-[10px] font-bold text-slate-600 uppercase">
+                          <span class="flex items-center gap-1">
+                            <mat-icon class="text-xs w-auto h-auto">calendar_today</mat-icon>
+                            {{ sub.submittedAt | date:'medium' }}
                           </span>
-                        </td>
-                        <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                          {{ sub.executionTime }} ms
-                        </td>
-                        <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                          <span class="inline-flex items-center rounded-md bg-gray-100 px-2 py-1 text-xs font-medium text-gray-600">
+                          <span class="flex items-center gap-1">
+                            <mat-icon class="text-xs w-auto h-auto">speed</mat-icon>
+                            {{ sub.executionTime }}MS
+                          </span>
+                          <span class="flex items-center gap-1">
+                            <mat-icon class="text-xs w-auto h-auto">code</mat-icon>
                             {{ sub.language }}
                           </span>
-                        </td>
-                      </tr>
-                    }
-                  }
-                </tbody>
-              </table>
-            </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="flex items-center gap-2">
+                      <button [routerLink]="['/problems', sub.problemId]" class="px-4 py-2 bg-black text-white border-2 border-black font-black text-[10px] uppercase hover:bg-slate-800 transition-colors">
+                        VIEW_CODE
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Expanded section indicator -->
+                <div class="h-1 bg-black w-full opacity-10 group-hover:opacity-100 transition-opacity"></div>
+              </div>
+            }
           </div>
-        </div>
+        }
       </div>
     </div>
   `

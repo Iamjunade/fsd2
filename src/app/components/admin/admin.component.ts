@@ -9,98 +9,146 @@ import { MatIconModule } from '@angular/material/icon';
   standalone: true,
   imports: [FormsModule, MatIconModule],
   template: `
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div class="sm:flex sm:items-center justify-between mb-8">
-        <div>
-          <h1 class="text-3xl font-semibold text-gray-900">Admin Panel</h1>
-          <p class="mt-2 text-sm text-gray-700">Manage coding problems.</p>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <!-- Terminal Header -->
+      <div class="bg-black border-4 border-black p-4 mb-10 flex flex-col sm:flex-row items-center justify-between neo-brutalist-shadow gap-4">
+        <div class="flex items-center gap-3">
+          <div class="bg-red-600 p-1.5 border-2 border-black">
+            <mat-icon class="text-white text-base h-auto w-auto">security</mat-icon>
+          </div>
+          <div>
+            <h1 class="text-white font-black text-lg tracking-tighter uppercase leading-none">CORE_ADMIN_INTERFACE_v4.2</h1>
+            <p class="text-[10px] text-red-500 font-mono font-bold tracking-widest mt-1 anim-pulse">SECURITY_LEVEL: OMEGA // ACCESS_GRANTED</p>
+          </div>
         </div>
-        <div class="flex gap-2">
-          <button (click)="seedProblems()" [disabled]="seeding()" class="inline-flex items-center justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 sm:w-auto disabled:opacity-50">
-            <mat-icon class="mr-2 text-gray-500">auto_awesome</mat-icon> 
-            {{ seeding() ? 'Seeding...' : 'Seed 10 Problems' }}
+        
+        <div class="flex gap-4 w-full sm:w-auto">
+          <button (click)="seedProblems()" [disabled]="seeding()" 
+            class="flex-1 sm:flex-none px-6 py-2 bg-white border-4 border-black font-black uppercase text-xs tracking-tighter hover:translate-x-1 hover:-translate-y-1 transition-transform neo-brutalist-shadow disabled:opacity-50">
+            {{ seeding() ? 'SEEDING...' : 'INIT_SEED_SEQUENCE' }}
           </button>
-          <button (click)="openAddModal()" class="inline-flex items-center justify-center rounded-md border border-transparent bg-emerald-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 sm:w-auto">
-            <mat-icon class="mr-2">add</mat-icon> Add Problem
+          <button (click)="openAddModal()" 
+            class="flex-1 sm:flex-none px-6 py-2 bg-primary text-white border-4 border-black font-black uppercase text-xs tracking-tighter hover:translate-x-1 hover:-translate-y-1 transition-transform neo-brutalist-shadow-primary">
+            ADD_NEW_MANIFEST
           </button>
         </div>
       </div>
 
-      <!-- Problem List -->
-      <div class="bg-white shadow overflow-hidden sm:rounded-md">
-        <ul role="list" class="divide-y divide-gray-200">
-          @for (problem of problemService.problems(); track problem.id) {
-            <li>
-              <div class="px-4 py-4 flex items-center sm:px-6">
-                <div class="min-w-0 flex-1 sm:flex sm:items-center sm:justify-between">
-                  <div>
-                    <div class="flex text-sm">
-                      <p class="font-medium text-emerald-600 truncate">{{ problem.title }}</p>
-                      <p class="ml-1 flex-shrink-0 font-normal text-gray-500">
-                        - {{ problem.difficulty }}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                <div class="ml-5 flex-shrink-0 flex gap-2">
-                  <button (click)="openEditModal(problem)" class="text-indigo-600 hover:text-indigo-900">
-                    <mat-icon>edit</mat-icon>
+      <!-- Problem List Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        @for (problem of problemService.problems(); track problem.id) {
+          <div class="bg-white border-4 border-black neo-brutalist-shadow group relative overflow-hidden">
+            <!-- Difficulty Bar -->
+            <div class="absolute top-0 right-0 p-2">
+              <span class="px-3 py-1 bg-black text-white text-[10px] font-black uppercase tracking-tighter"
+                [class.bg-green-500]="problem.difficulty === 'Easy'"
+                [class.bg-yellow-500]="problem.difficulty === 'Medium'"
+                [class.bg-red-600]="problem.difficulty === 'Hard'">
+                {{ problem.difficulty }}
+              </span>
+            </div>
+
+            <div class="p-8">
+              <p class="text-[10px] font-black text-slate-400 mb-2 uppercase tracking-widest">// NODE_ID: {{ problem.id?.substring(0, 8) }}</p>
+              <h3 class="text-xl font-black uppercase mb-4 tracking-tighter leading-tight group-hover:text-primary transition-colors">
+                {{ problem.title }}
+              </h3>
+              
+              <div class="flex flex-wrap gap-2 mb-6">
+                @if (problem.subsystem) {
+                  <span class="px-2 py-0.5 border-2 border-black text-[10px] font-black bg-slate-100 uppercase">{{ problem.subsystem }}</span>
+                }
+                @for (tag of problem.tags; track tag) {
+                  <span class="px-2 py-0.5 border-2 border-black text-[10px] font-black bg-white uppercase">#{{ tag }}</span>
+                }
+              </div>
+
+              <div class="flex items-center justify-between pt-6 border-t-4 border-black border-dashed">
+                <div class="flex gap-4">
+                  <button (click)="openEditModal(problem)" class="flex items-center gap-1 font-black text-xs uppercase hover:text-primary">
+                    <mat-icon class="text-sm h-auto w-auto">edit</mat-icon> EDIT
                   </button>
-                  <button (click)="deleteProblem(problem.id!)" class="text-red-600 hover:text-red-900">
-                    <mat-icon>delete</mat-icon>
+                  <button (click)="deleteProblem(problem.id!)" class="flex items-center gap-1 font-black text-xs uppercase text-red-600 hover:text-red-800">
+                    <mat-icon class="text-sm h-auto w-auto">delete</mat-icon> PURGE
                   </button>
                 </div>
               </div>
-            </li>
-          }
-        </ul>
+            </div>
+          </div>
+        }
       </div>
 
-      <!-- Modal for Add/Edit -->
+      <!-- Modal for Add/Edit (Terminal Style) -->
       @if (showModal()) {
-        <div class="fixed inset-0 z-10 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-          <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-            <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true" (click)="closeModal()"></div>
-            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-            <div class="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6">
-              <div>
-                <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title">
-                  {{ editingProblem() ? 'Edit Problem' : 'Add New Problem' }}
-                </h3>
-                <div class="mt-4 space-y-4">
+        <div class="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-4 sm:p-6">
+          <div class="fixed inset-0 bg-black/80 backdrop-blur-sm" (click)="closeModal()"></div>
+          
+          <div class="relative w-full max-w-2xl bg-white border-8 border-black neo-brutalist-shadow-primary max-h-[90vh] overflow-y-auto">
+            <!-- Modal Header -->
+            <div class="bg-black p-4 flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <mat-icon class="text-primary text-xl">terminal</mat-icon>
+                <span class="text-white font-black uppercase tracking-tighter text-sm">
+                  {{ editingProblem() ? 'EDIT_MANIFEST_OVERRIDE' : 'NEW_MANIFEST_ENTRY' }}
+                </span>
+              </div>
+              <button (click)="closeModal()" class="text-white hover:text-red-500 transition-colors">
+                <mat-icon>close</mat-icon>
+              </button>
+            </div>
+
+            <div class="p-8">
+              <div class="space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label for="title" class="block text-sm font-medium text-gray-700">Title</label>
-                    <input id="title" type="text" [ngModel]="formData().title" (ngModelChange)="updateFormData('title', $event)" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm">
+                    <label class="block text-xs font-black uppercase mb-2">MANIFEST_TITLE</label>
+                    <input type="text" [ngModel]="formData().title" (ngModelChange)="updateFormData('title', $event)" 
+                      class="w-full bg-slate-50 border-4 border-black p-3 font-bold focus:ring-4 focus:ring-primary/20 outline-none uppercase placeholder:text-slate-300"
+                      placeholder="ENTER_IDENTIFIER">
                   </div>
                   <div>
-                    <label for="difficulty" class="block text-sm font-medium text-gray-700">Difficulty</label>
-                    <select id="difficulty" [ngModel]="formData().difficulty" (ngModelChange)="updateFormData('difficulty', $event)" class="mt-1 block w-full bg-white border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm">
-                      <option value="Easy">Easy</option>
-                      <option value="Medium">Medium</option>
-                      <option value="Hard">Hard</option>
+                    <label class="block text-xs font-black uppercase mb-2">THREAT_LEVEL</label>
+                    <select [ngModel]="formData().difficulty" (ngModelChange)="updateFormData('difficulty', $event)" 
+                      class="w-full bg-slate-50 border-4 border-black p-3 font-black focus:ring-4 focus:ring-primary/20 outline-none uppercase cursor-pointer">
+                      <option value="Easy">EASY_LOW</option>
+                      <option value="Medium">MEDIUM_ELEVATED</option>
+                      <option value="Hard">HARD_CRITICAL</option>
                     </select>
                   </div>
+                </div>
+
+                <div>
+                  <label class="block text-xs font-black uppercase mb-2">MISSION_DESCRIPTION</label>
+                  <textarea [ngModel]="formData().description" (ngModelChange)="updateFormData('description', $event)" 
+                    rows="4" class="w-full bg-slate-50 border-4 border-black p-4 font-medium focus:ring-4 focus:ring-primary/20 outline-none"
+                    placeholder="DESCRIBE_OBJECTIVES..."></textarea>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
-                    <textarea id="description" [ngModel]="formData().description" (ngModelChange)="updateFormData('description', $event)" rows="4" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm"></textarea>
+                    <label class="block text-xs font-black uppercase mb-2">SAMPLE_TELEMETRY_IN</label>
+                    <textarea [ngModel]="formData().sampleInput" (ngModelChange)="updateFormData('sampleInput', $event)" 
+                      rows="3" class="w-full bg-black text-green-400 border-4 border-black p-4 font-mono text-sm focus:ring-4 focus:ring-primary/20 outline-none shadow-inner"
+                      placeholder="INIT_STATE"></textarea>
                   </div>
                   <div>
-                    <label for="sampleInput" class="block text-sm font-medium text-gray-700">Sample Input</label>
-                    <textarea id="sampleInput" [ngModel]="formData().sampleInput" (ngModelChange)="updateFormData('sampleInput', $event)" rows="2" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm font-mono"></textarea>
-                  </div>
-                  <div>
-                    <label for="sampleOutput" class="block text-sm font-medium text-gray-700">Sample Output</label>
-                    <textarea id="sampleOutput" [ngModel]="formData().sampleOutput" (ngModelChange)="updateFormData('sampleOutput', $event)" rows="2" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm font-mono"></textarea>
+                    <label class="block text-xs font-black uppercase mb-2">EXPECTED_TELEMETRY_OUT</label>
+                    <textarea [ngModel]="formData().sampleOutput" (ngModelChange)="updateFormData('sampleOutput', $event)" 
+                      rows="3" class="w-full bg-black text-primary border-4 border-black p-4 font-mono text-sm focus:ring-4 focus:ring-primary/20 outline-none shadow-inner"
+                      placeholder="FINAL_STATE"></textarea>
                   </div>
                 </div>
-              </div>
-              <div class="mt-5 sm:mt-6 sm:grid sm:grid-cols-2 sm:gap-3 sm:grid-flow-row-dense">
-                <button type="button" (click)="saveProblem()" class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-emerald-600 text-base font-medium text-white hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 sm:col-start-2 sm:text-sm">
-                  Save
-                </button>
-                <button type="button" (click)="closeModal()" class="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 sm:mt-0 sm:col-start-1 sm:text-sm">
-                  Cancel
-                </button>
+
+                <div class="pt-6 flex gap-4">
+                  <button (click)="saveProblem()" 
+                    class="flex-1 py-4 bg-primary text-white border-4 border-black font-black uppercase tracking-widest hover:translate-x-1 hover:-translate-y-1 transition-transform neo-brutalist-shadow-primary">
+                    EXECUTE_SAVE
+                  </button>
+                  <button (click)="closeModal()" 
+                    class="px-8 py-4 bg-white border-4 border-black font-black uppercase tracking-widest hover:translate-x-1 hover:-translate-y-1 transition-transform neo-brutalist-shadow">
+                    ABORT
+                  </button>
+                </div>
               </div>
             </div>
           </div>
