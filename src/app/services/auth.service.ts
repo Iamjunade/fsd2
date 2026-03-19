@@ -66,6 +66,7 @@ export class AuthService {
         await setDoc(userDocRef, newUser);
       } catch (e) {
         console.error('Failed to create user profile', e);
+        throw e; // Propagate the error so UI can show it
       }
       this.currentUser.set(newUser);
     }

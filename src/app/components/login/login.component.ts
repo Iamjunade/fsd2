@@ -25,6 +25,13 @@ import { CommonModule } from '@angular/common';
           <div class="p-8">
             <p class="text-xs font-bold text-slate-500 uppercase mb-8 italic">// ACCESS_PROTOCOL_REQUIRED</p>
 
+            @if (errorMessage()) {
+              <div class="bg-red-500 text-white border-4 border-black p-4 mb-6 neo-brutalist-shadow font-black uppercase text-xs flex items-center gap-2 animate-bounce">
+                <span class="material-symbols-outlined">warning</span>
+                {{ errorMessage() }}
+              </div>
+            }
+
             <form (submit)="login($event)" class="space-y-6">
               <!-- Email -->
               <div>
@@ -92,16 +99,25 @@ export class LoginComponent {
   email = '';
   password = '';
   loading = signal(false);
+  errorMessage = signal<string | null>(null);
 
   async login(event: Event) {
     event.preventDefault();
+    this.errorMessage.set(null);
     if (this.email && this.password) {
       this.loading.set(true);
       try {
         await this.authService.loginWithEmail(this.email, this.password);
         this.router.navigate(['/problems']);
-      } catch (error) {
+      } catch (error: any) {
         console.error('Login failed', error);
+        if (error.code === 'auth/invalid-credential' || error.code === 'auth/user-not-found') {
+          this.errorMessage.set('INVALID_CREDENTIALS: ACCESS_DENIED');
+        } else if (error.code === 'permission-denied') {
+          this.errorMessage.set('DATABASE_PERMISSION_DENIED: CONTACT_ADMIN');
+        } else {
+          this.errorMessage.set(error.message || 'LOGIN_FAILURE_DETECTED');
+        }
       } finally {
         this.loading.set(false);
       }

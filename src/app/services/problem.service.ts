@@ -38,6 +38,10 @@ export class ProblemService {
       this.loading.set(false);
     }, (error: FirestoreError) => {
       console.error('Error loading problems', error);
+      // Fallback to minimal mock data if permission denied
+      if (error.code === 'permission-denied') {
+        console.warn('Permission denied for problems, using initial mock data.');
+      }
       this.loading.set(false);
     });
   }

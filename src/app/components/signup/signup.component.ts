@@ -25,6 +25,13 @@ import { CommonModule } from '@angular/common';
           <div class="p-8">
             <p class="text-xs font-bold text-slate-500 uppercase mb-8 italic">// ESTABLISHING_IDENTITY_PROTOCOL</p>
 
+            @if (errorMessage()) {
+              <div class="bg-red-500 text-white border-4 border-black p-4 mb-6 neo-brutalist-shadow font-black uppercase text-xs flex items-center gap-2 animate-bounce">
+                <span class="material-symbols-outlined">warning</span>
+                {{ errorMessage() }}
+              </div>
+            }
+
             <form (submit)="signup($event)" class="space-y-6">
               <!-- Username -->
               <div>
@@ -100,16 +107,23 @@ export class SignupComponent {
   email = '';
   password = '';
   loading = signal(false);
+  errorMessage = signal<string | null>(null);
 
   async signup(event: Event) {
     event.preventDefault();
+    this.errorMessage.set(null);
     if (this.email && this.password && this.username) {
       this.loading.set(true);
       try {
         await this.authService.signupWithEmail(this.email, this.password, this.username);
         this.router.navigate(['/problems']);
-      } catch (error) {
+      } catch (error: any) {
         console.error('Signup failed', error);
+        if (error.code === 'permission-denied' || error.message?.includes('permission')) {
+          this.errorMessage.set('DATABASE_PERMISSION_DENIDED: CONTACT_ADMIN');
+        } else {
+          this.errorMessage.set(error.message || 'SIGNUP_FAILURE_DETECTED');
+        }
       } finally {
         this.loading.set(false);
       }
