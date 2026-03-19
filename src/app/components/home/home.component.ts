@@ -199,17 +199,23 @@ import { AuthService } from '../../services/auth.service';
               <p class="text-2xl font-bold max-w-2xl text-slate-400">
                 Stop practicing randomly. Use our curated paths to master the algorithms that matter in a design language that inspires.
               </p>
-              @if (authService.currentUser()) {
-                <a routerLink="/problems"
-                   class="inline-block px-16 py-8 bg-white text-black text-3xl font-black uppercase border-4 border-primary shadow-[12px_12px_0px_0px_#b90df2] hover:translate-x-3 hover:translate-y-3 hover:shadow-none transition-all no-underline">
-                  Start Journey
+              <div class="flex flex-wrap gap-8">
+                @if (authService.currentUser()) {
+                  <a routerLink="/problems"
+                    class="inline-block px-10 py-6 bg-white text-black text-2xl font-black uppercase border-4 border-primary shadow-[12px_12px_0px_0px_#b90df2] hover:translate-x-3 hover:translate-y-3 hover:shadow-none transition-all no-underline">
+                    Start Journey
+                  </a>
+                } @else {
+                  <a routerLink="/login"
+                    class="inline-block px-10 py-6 bg-white text-black text-2xl font-black uppercase border-4 border-primary shadow-[12px_12px_0px_0px_#b90df2] hover:translate-x-3 hover:translate-y-3 hover:shadow-none transition-all no-underline">
+                    Start Journey
+                  </a>
+                }
+                <a routerLink="/docs"
+                  class="inline-block px-10 py-6 bg-primary text-white text-2xl font-black uppercase border-4 border-white shadow-[12px_12px_0px_0px_#fff] hover:translate-x-3 hover:translate-y-3 hover:shadow-none transition-all no-underline">
+                  Project Docs
                 </a>
-              } @else {
-                <a routerLink="/login"
-                   class="inline-block px-16 py-8 bg-white text-black text-3xl font-black uppercase border-4 border-primary shadow-[12px_12px_0px_0px_#b90df2] hover:translate-x-3 hover:translate-y-3 hover:shadow-none transition-all no-underline">
-                  Start Journey
-                </a>
-              }
+              </div>
             </div>
           </div>
         </section>
