@@ -1,0 +1,64 @@
+For your Project Documentation Report, you should include code snippets from the following key files, as they represent the architectural heart and unique features of your platform.
+
+1. Core Architecture & Routing
+These files show how you structured the Single Page Application (SPA) and integrated the new documentation module.
+
+
+src/app/app.routes.ts
+: Shows the full site map, including your new /docs route and the standalone component structure.
+
+src/app/app.config.ts
+: Displays the application providers, including the Monaco Editor configuration.
+2. Backend & Code Execution Engine
+This is the most technically significant part of your report, as it shows how you handle remote code compilation.
+
+
+src/server.ts
+: (CRITICAL) Include the logic for onlinecompiler.io integration. Showcase the COMPILER_NAMES mapping and the POST /api/run-code endpoint where you use your API key and the run-code-sync service.
+3. Specialized Components
+Include these to demonstrate your custom UI development and the academic nature of the micro project.
+
+
+src/app/components/doc/doc.component.ts
+: This IS your project report in code form! It contains the team details, faculty guidance, and technical specs.
+
+src/app/components/problem-detail/problem-detail.component.ts
+: Shows how you integrated the Monaco Editor and connected it to your backend execution API.
+
+src/app/components/sidebar/sidebar.component.ts
+: Highlights the implementation of the "Hacker Console" navigation system and the neo-brutalist styling logic (routerLinkActive).
+4. Deployment & Configuration
+This proves the project is production-ready and optimized for modern hosting.
+
+
+vercel.json
+: Explains how you solved the SPA routing 404 issue by ensuring all direct navigation requests are handled by the Angular router.
+
+angular.json
+: Shows the prerendering and SSR configuration that makes the site fast and SEO-friendly.
+推荐的报告结构 (Suggested Report Order):
+Abstract: Brief overview of the "CodeLab" mission.
+System Architecture: High-level diagram + 
+
+app.routes.ts
+.
+Module Implementation:
+Explain the IDE using problem-detail.component.ts.
+Explain the Backend using 
+
+server.ts
+.
+Special Features:
+Documentation module (
+
+doc.component.ts
+).
+Neo-brutalist design tokens (styles.css).
+Deployment: Vercel configuration (
+
+vercel.json
+).
+Team & Conclusion: Reference the list in your 
+
+DocComponent
+.

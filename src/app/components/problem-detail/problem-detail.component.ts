@@ -1,14 +1,17 @@
-import { Component, OnInit, AfterViewInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProblemService } from '../../services/problem.service';
 import { Problem } from '../../models/types';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
+import { CodeExecutionService } from '../../services/code-execution.service';
 
 @Component({
   selector: 'app-problem-detail',
   standalone: true,
-  imports: [MatIconModule, CommonModule],
+  imports: [MatIconModule, CommonModule, FormsModule, MonacoEditorModule],
   template: `
     <div class="min-h-[calc(100vh-64px)] terminal-grid bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display p-6 md:p-10">
       <div class="max-w-7xl mx-auto flex flex-col lg:flex-row gap-10 items-start">
@@ -100,16 +103,57 @@ import { CommonModule } from '@angular/common';
           <div class="px-6 py-3 border-b-4 border-black bg-slate-200 dark:bg-slate-800 flex items-center justify-between">
             <div class="flex items-center gap-3">
               <span class="material-symbols-outlined font-black">terminal</span>
-              <h2 class="font-black uppercase tracking-tighter text-xl">BUFFER_V24.exe</h2>
+              <select [(ngModel)]="selectedLanguage" (change)="onLanguageChange()" class="bg-black text-white border-2 border-primary font-black uppercase text-xs px-2 py-1 outline-none">
+                <option value="python">PYTHON_3.14</option>
+                <option value="cpp">GCC_G++_15</option>
+                <option value="java">OPENJDK_25</option>
+                <option value="javascript">NODE_JS_DENO</option>
+              </select>
             </div>
-            <div class="flex gap-2">
-               <div class="size-3 rounded-full border-2 border-black bg-yellow-400"></div>
-               <div class="size-3 rounded-full border-2 border-black bg-green-500"></div>
+            <div class="flex gap-4">
+              <button (click)="onRunCode()" [disabled]="executing()"
+                      class="bg-green-500 text-black px-4 py-1 text-xs font-black uppercase border-2 border-black shadow-[4px_4px_0px_0px_#000] active:translate-x-1 active:translate-y-1 active:shadow-none transition-all disabled:opacity-50">
+                {{ executing() ? 'RUNNING...' : 'RUN_CODE' }}
+              </button>
+              <button (click)="onSubmitCode()" [disabled]="executing()"
+                      class="bg-primary text-white px-4 py-1 text-xs font-black uppercase border-2 border-black shadow-[4px_4px_0px_0px_#000] active:translate-x-1 active:translate-y-1 active:shadow-none transition-all disabled:opacity-50">
+                {{ executing() ? 'PROCESSING...' : 'SUBMIT_PLAN' }}
+              </button>
             </div>
           </div>
 
-          <div class="p-6 flex-1 bg-white">
-            <div data-pym-src="https://www.jdoodle.com/embed/v1/4defaf9d91a9060c" class="w-full"></div>
+          <div class="flex-1 flex flex-col min-h-[600px]">
+            <!-- Monaco Editor -->
+            <div class="flex-1 border-b-4 border-black overflow-hidden bg-[#1e1e1e]">
+              <ngx-monaco-editor [options]="editorOptions" [(ngModel)]="code" class="h-full w-full"></ngx-monaco-editor>
+            </div>
+
+            <!-- Inputs & Output Console -->
+            <div class="h-64 bg-black text-white font-mono flex flex-col">
+              <div class="flex border-b-2 border-slate-800">
+                <button (click)="activeTab = 'stdin'" [class.bg-slate-800]="activeTab === 'stdin'" class="px-6 py-2 text-xs font-black border-r-2 border-slate-800 uppercase">STDIN_BUFFER</button>
+                <button (click)="activeTab = 'stdout'" [class.bg-slate-800]="activeTab === 'stdout'" class="px-6 py-2 text-xs font-black border-r-2 border-slate-800 uppercase">STDOUT_LOG</button>
+              </div>
+              
+              <div class="flex-1 p-4 overflow-auto custom-scrollbar">
+                @if (activeTab === 'stdin') {
+                  <textarea [(ngModel)]="stdin" 
+                    placeholder="ENTER_SAMPLES_HERE..."
+                    class="w-full h-full bg-transparent outline-none text-primary resize-none placeholder:text-primary/30"></textarea>
+                } @else {
+                  <div class="whitespace-pre-wrap">
+                    @if (output()) {
+                      <div [class.text-red-500]="status() === 'error'" class="mb-4">
+                        <span class="text-slate-500">[{{ status() === 'success' ? 'SUCCESS' : 'FAILURE' }}]</span><br>
+                        {{ output() }}
+                      </div>
+                    } @else {
+                      <div class="text-slate-500 animate-pulse">&gt; WAITING_FOR_EXECUTION_STREAM...</div>
+                    }
+                  </div>
+                }
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -119,16 +163,35 @@ import { CommonModule } from '@angular/common';
     .custom-scrollbar::-webkit-scrollbar { width: 8px; }
     .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
     .custom-scrollbar::-webkit-scrollbar-thumb { background: #000; border: 2px solid #fff; }
-    :host ::ng-deep iframe { border: none !important; width: 100% !important; min-height: 700px !important; }
   `]
 })
-export class ProblemDetailComponent implements OnInit, AfterViewInit {
+export class ProblemDetailComponent implements OnInit {
   route = inject(ActivatedRoute);
   router = inject(Router);
   problemService = inject(ProblemService);
+  codeService = inject(CodeExecutionService);
 
   problem = signal<Problem | null>(null);
   loading = signal<boolean>(true);
+  
+  // IDE State
+  code: string = '# write your code here...';
+  selectedLanguage: string = 'python';
+  stdin: string = '';
+  output = signal<string>('');
+  status = signal<string>('');
+  executing = signal<boolean>(false);
+  activeTab: 'stdin' | 'stdout' = 'stdout';
+
+  editorOptions = {
+    theme: 'vs-dark',
+    language: 'python',
+    fontSize: 14,
+    fontFamily: "'Fira Code', monospace",
+    minimap: { enabled: false },
+    automaticLayout: true,
+    padding: { top: 20 }
+  };
 
   async ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
@@ -148,6 +211,7 @@ export class ProblemDetailComponent implements OnInit, AfterViewInit {
       }
       
       this.problem.set(p);
+      this.setDefaultCode(p);
     }
     this.loading.set(false);
   }
@@ -192,11 +256,62 @@ export class ProblemDetailComponent implements OnInit, AfterViewInit {
     return mocks.find(m => m.id === id || (m.id && m.id.includes(id))) || mocks[0];
   }
 
-  ngAfterViewInit() {
-    const script = document.createElement('script');
-    script.src = 'https://www.jdoodle.com/assets/jdoodle-pym.min.js';
-    script.type = 'text/javascript';
-    document.body.appendChild(script);
+  setDefaultCode(p: Problem | null) {
+    if (p?.tags?.includes('C++')) {
+      this.selectedLanguage = 'cpp';
+      this.code = '#include <iostream>\n\nint main() {\n    std::cout << "Hello World";\n    return 0;\n}';
+    } else {
+      this.selectedLanguage = 'python';
+      this.code = 'print("Hello World")';
+    }
+    this.onLanguageChange();
+  }
+
+  onLanguageChange() {
+    this.editorOptions = { ...this.editorOptions, language: this.selectedLanguage };
+  }
+
+  onRunCode() {
+    if (this.executing()) return;
+    
+    this.executing.set(true);
+    this.activeTab = 'stdout';
+    this.output.set('');
+    
+    this.codeService.runCode(this.code, this.selectedLanguage, this.stdin).subscribe({
+      next: (res) => {
+        this.output.set(res.output);
+        this.status.set(res.status);
+        this.executing.set(false);
+      },
+      error: (err) => {
+        this.output.set('CRITICAL_SYSTEM_ERROR: ' + err.message);
+        this.status.set('error');
+        this.executing.set(false);
+      }
+    });
+  }
+
+  onSubmitCode() {
+    if (this.executing()) return;
+    
+    this.executing.set(true);
+    this.activeTab = 'stdout';
+    this.output.set('INITIATING_CORE_SUBMISSION_VALDIATION...\n');
+    
+    this.codeService.submitCode(this.code, this.selectedLanguage, this.stdin).subscribe({
+      next: (res) => {
+        this.output.set(`STATUS: ${res.status}\n\nTEST_CASE_SUMMARY:\n` + 
+          res.testCases.map((tc: any) => `[TC_${tc.id}] ${tc.type}: ${tc.status} (${tc.time}ms)`).join('\n'));
+        this.status.set(res.status === 'Accepted' ? 'success' : 'error');
+        this.executing.set(false);
+      },
+      error: (err) => {
+        this.output.set('SUBMISSION_FAILED: ' + err.message);
+        this.status.set('error');
+        this.executing.set(false);
+      }
+    });
   }
 
   getThreatColor(difficulty: string) {
