@@ -2,8 +2,8 @@
   "version": 2,
   "rewrites": [
     {
-      "source": "/(docs|problems|problems/.*|leaderboard|submissions|identity|manifesto|blog|community|connect|login|signup|admin)",
-      "destination": "/"
+      "source": "/((?!api/).*)",
+      "destination": "/index.html"
     }
   ]
 }
