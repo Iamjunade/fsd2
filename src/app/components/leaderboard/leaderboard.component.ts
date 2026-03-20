@@ -103,7 +103,7 @@ import { SidebarComponent } from '../sidebar/sidebar.component';
               }
             </section>
 
-            <!-- List View Top 50 -->
+            <!-- Global Rankings -->
             <div class="space-y-4">
               <div class="grid grid-cols-12 gap-4 px-6 py-2 text-[10px] font-black uppercase text-primary tracking-[0.2em] border-b border-primary/20 pb-4">
                 <div class="col-span-1">RK</div>

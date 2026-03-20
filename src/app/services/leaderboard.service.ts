@@ -25,8 +25,7 @@ export class LeaderboardService {
   loadLeaderboard() {
     const q = query(
       collection(db, 'users'), 
-      orderBy('points', 'desc'), 
-      limit(50)
+      orderBy('points', 'desc')
     );
 
     onSnapshot(q, (snapshot: QuerySnapshot<DocumentData>) => {
