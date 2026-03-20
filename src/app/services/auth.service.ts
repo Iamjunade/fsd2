@@ -112,4 +112,17 @@ export class AuthService {
       throw error;
     }
   }
+
+  getLevel(points: number = 0): number {
+    return Math.floor(points / 250) + 1;
+  }
+
+  getRankTitle(points: number = 0): string {
+    if (points >= 5000) return 'NEXUS_GRANDMASTER';
+    if (points >= 2500) return 'VOIDCROWNER';
+    if (points >= 1000) return 'CYBER_SENTINEL';
+    if (points >= 500) return 'ELITE_OPERATOR';
+    if (points >= 100) return 'RECRUIT_INITIATE';
+    return 'NEO_CODER';
+  }
 }

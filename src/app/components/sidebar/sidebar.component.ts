@@ -17,7 +17,7 @@ import { AuthService } from '../../services/auth.service';
           </div>
           <div class="overflow-hidden">
             <h3 class="text-[10px] font-black uppercase tracking-tighter text-primary truncate">{{ authService.currentUser()?.username || 'SYSTEM_GUEST' }}</h3>
-            <p class="text-[8px] font-bold text-slate-500 uppercase tracking-widest leading-none">RANK: ELITE</p>
+            <p class="text-[8px] font-bold text-slate-500 uppercase tracking-widest leading-none">RANK: {{ authService.getRankTitle(authService.currentUser()?.points || 0) }}</p>
           </div>
         </div>
       </div>
