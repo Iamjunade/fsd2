@@ -12,7 +12,7 @@ import { SidebarComponent } from '../sidebar/sidebar.component';
   standalone: true,
   imports: [RouterLink, MatIconModule, FormsModule, CommonModule, SidebarComponent],
   template: `
-    <div class="h-[calc(100vh-76px)] bg-[#0a0a0a] dot-grid-bg text-white font-display overflow-hidden flex flex-col sm:flex-row">
+    <div class="h-[calc(100vh-104px)] bg-[#0a0a0a] dot-grid-bg text-white font-display overflow-hidden flex flex-col sm:flex-row">
       <!-- Sidebar -->
       <app-sidebar></app-sidebar>
 

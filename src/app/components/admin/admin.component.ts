@@ -11,7 +11,7 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [FormsModule, MatIconModule, SidebarComponent, CommonModule],
   template: `
-    <div class="h-[calc(100vh-76px)] bg-[#0a0a0a] dot-grid-bg text-white font-display overflow-hidden flex flex-col sm:flex-row">
+    <div class="h-[calc(100vh-104px)] bg-[#0a0a0a] dot-grid-bg text-white font-display overflow-hidden flex flex-col sm:flex-row">
       <!-- Sidebar -->
       <app-sidebar></app-sidebar>
 

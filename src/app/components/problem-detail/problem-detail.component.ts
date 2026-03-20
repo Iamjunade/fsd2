@@ -15,7 +15,7 @@ import { AuthService } from '../../services/auth.service';
   standalone: true,
   imports: [MatIconModule, CommonModule, FormsModule, MonacoEditorModule],
   template: `
-    <div class="min-h-[calc(100vh-64px)] terminal-grid bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display p-6 md:p-10">
+    <div class="min-h-[calc(100vh-92px)] terminal-grid bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display p-6 md:p-10">
       <div class="max-w-7xl mx-auto flex flex-col lg:flex-row gap-10 items-start">
         
         <!-- Left Panel: Problem Description -->

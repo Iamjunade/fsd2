@@ -7,38 +7,6 @@ import { AuthService } from '../../services/auth.service';
   standalone: true,
   imports: [RouterLink, RouterLinkActive],
   template: `
-    <div class="w-full bg-primary border-b-4 border-black overflow-hidden whitespace-nowrap py-2 relative z-[60]">
-      <div class="marquee-content inline-block text-white font-black uppercase text-[10px] tracking-widest">
-        <span class="mx-4">FACULTY_GUIDANCE: MR SHIVA KUMAR (PROJECT LEAD & MENTOR)</span>
-        <span class="mx-4 text-black">//</span>
-        <span class="mx-4">TEAM: MOHAMMED JUNADE PASHA</span>
-        <span class="mx-4 text-black">//</span>
-        <span class="mx-4">RISHIKESH MEPPERI</span>
-        <span class="mx-4 text-black">//</span>
-        <span class="mx-4">TEJA REDDY</span>
-        <span class="mx-4 text-black">//</span>
-        <span class="mx-4">ISHAN SAI</span>
-        <span class="mx-4 text-black">//</span>
-        <span class="mx-4">SATHYANARAYAN</span>
-        <span class="mx-4 text-black">//</span>
-        <span class="mx-4">SAMIKSHA</span>
-        <span class="mx-4 text-black">***</span>
-        <span class="mx-4">FACULTY_GUIDANCE: MR SHIVA KUMAR (PROJECT LEAD & MENTOR)</span>
-        <span class="mx-4 text-black">//</span>
-        <span class="mx-4">TEAM: MOHAMMED JUNADE PASHA</span>
-        <span class="mx-4 text-black">//</span>
-        <span class="mx-4">RISHIKESH MEPPERI</span>
-        <span class="mx-4 text-black">//</span>
-        <span class="mx-4">TEJA REDDY</span>
-        <span class="mx-4 text-black">//</span>
-        <span class="mx-4">ISHAN SAI</span>
-        <span class="mx-4 text-black">//</span>
-        <span class="mx-4">SATHYANARAYAN</span>
-        <span class="mx-4 text-black">//</span>
-        <span class="mx-4">SAMIKSHA</span>
-      </div>
-    </div>
-
     <header class="sticky top-0 z-50 w-full bg-white dark:bg-black border-b-4 border-black dark:border-primary px-6 py-4">
       <div class="max-w-[1400px] mx-auto flex items-center justify-between">
         <!-- Logo -->
@@ -96,6 +64,38 @@ import { AuthService } from '../../services/auth.service';
         </div>
       </div>
     </header>
+
+    <div class="w-full bg-primary border-b-4 border-black overflow-hidden whitespace-nowrap py-2 relative z-[40]">
+      <div class="marquee-content inline-block text-white font-black uppercase text-[10px] tracking-widest">
+        <span class="mx-4">FACULTY_GUIDANCE: MR SHIVA KUMAR (PROJECT LEAD & MENTOR)</span>
+        <span class="mx-4 text-black">//</span>
+        <span class="mx-4">TEAM: MOHAMMED JUNADE PASHA</span>
+        <span class="mx-4 text-black">//</span>
+        <span class="mx-4">RISHIKESH MEPPERI</span>
+        <span class="mx-4 text-black">//</span>
+        <span class="mx-4">TEJA REDDY</span>
+        <span class="mx-4 text-black">//</span>
+        <span class="mx-4">ISHAN SAI</span>
+        <span class="mx-4 text-black">//</span>
+        <span class="mx-4">SATHYANARAYAN</span>
+        <span class="mx-4 text-black">//</span>
+        <span class="mx-4">SAMIKSHA</span>
+        <span class="mx-4 text-black">***</span>
+        <span class="mx-4">FACULTY_GUIDANCE: MR SHIVA KUMAR (PROJECT LEAD & MENTOR)</span>
+        <span class="mx-4 text-black">//</span>
+        <span class="mx-4">TEAM: MOHAMMED JUNADE PASHA</span>
+        <span class="mx-4 text-black">//</span>
+        <span class="mx-4">RISHIKESH MEPPERI</span>
+        <span class="mx-4 text-black">//</span>
+        <span class="mx-4">TEJA REDDY</span>
+        <span class="mx-4 text-black">//</span>
+        <span class="mx-4">ISHAN SAI</span>
+        <span class="mx-4 text-black">//</span>
+        <span class="mx-4">SATHYANARAYAN</span>
+        <span class="mx-4 text-black">//</span>
+        <span class="mx-4">SAMIKSHA</span>
+      </div>
+    </div>
   `,
   styles: [`
     .marquee-content {
