@@ -7,12 +7,16 @@ import {
   where, 
   orderBy, 
   onSnapshot,
+  doc,
+  updateDoc,
+  increment,
   QuerySnapshot,
   DocumentData,
   FirestoreError
 } from 'firebase/firestore';
-import { Submission } from '../models/types';
+import { Submission, Problem } from '../models/types';
 import { AuthService } from './auth.service';
+import { ProblemService } from './problem.service';
 
 @Injectable({
   providedIn: 'root'
@@ -22,6 +26,7 @@ export class SubmissionService {
   loading = signal<boolean>(false);
 
   authService = inject(AuthService);
+  problemService = inject(ProblemService);
 
   constructor() {
     // We'll load submissions when needed
@@ -84,19 +89,38 @@ export class SubmissionService {
     });
     
     const result = await response.json();
+    const mappedStatus = this.mapStatusForFirebase(result.status);
     
     const submission: Omit<Submission, 'id'> = {
       userId,
       problemId,
       code,
       language: language as 'python' | 'cpp' | 'java' | 'javascript',
-      status: this.mapStatusForFirebase(result.status), 
+      status: mappedStatus, 
       executionTime: result.executionTime || 0,
       submittedAt: new Date().toISOString(),
       testCases: result.testCases || []
     };
     
     const docRef = await addDoc(collection(db, 'codelab', 'submissions', 'items'), submission);
+
+    // UPDATE LEADERBOARD XP
+    if (mappedStatus === 'accepted') {
+      try {
+        const problem = await this.problemService.getProblem(problemId);
+        let xp = 50;
+        if (problem?.difficulty === 'Medium') xp = 100;
+        if (problem?.difficulty === 'Hard') xp = 200;
+
+        const userRef = doc(db, 'users', userId);
+        await updateDoc(userRef, {
+          points: increment(xp)
+        });
+      } catch (e) {
+        console.error('Failed to update XP:', e);
+      }
+    }
+
     return { id: docRef.id, ...submission };
   }
 

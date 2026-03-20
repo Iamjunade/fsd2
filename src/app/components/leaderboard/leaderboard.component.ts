@@ -19,9 +19,12 @@ import { SidebarComponent } from '../sidebar/sidebar.component';
       <main class="flex-1 relative overflow-y-auto p-6 sm:p-12 custom-scrollbar">
         <!-- Metadata Margins (Decorative) -->
         <div class="fixed top-28 right-6 text-[10px] font-black text-primary opacity-50 flex flex-col items-end gap-1 pointer-events-none hidden sm:flex">
-          <div>ENCRYPTION: STABLE</div>
-          <div>BUFFER_LOAD: 12%</div>
-          <div>LATENCY: 14MS</div>
+          <div class="flex items-center gap-2">
+            <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+            LIVE_DATA_STREAM: ACTIVE
+          </div>
+          <div>BUFFER_LOAD: 14%</div>
+          <div>LATENCY: 12MS</div>
           <div class="w-32 h-1 bg-primary mt-2"></div>
         </div>
 
@@ -46,12 +49,16 @@ import { SidebarComponent } from '../sidebar/sidebar.component';
               <!-- Rank 2 -->
               @if (leaderboardService.topPlayers().length >= 2) {
                 <div class="order-2 md:order-1 bg-surface-container border-4 border-white p-6 hard-shadow-purple transition-transform hover:-translate-y-2 bg-[#111]">
-                  <div class="text-4xl font-black italic mb-4 text-white">#02</div>
-                  <div class="w-full aspect-square bg-surface-bright mb-4 flex items-center justify-center border-2 border-dashed border-primary">
-                    <mat-icon class="text-6xl text-primary h-auto w-auto">robot</mat-icon>
+                  <div class="flex justify-between items-start mb-4">
+                    <div class="text-4xl font-black italic text-white">#02</div>
+                    <div class="bg-primary text-black px-2 py-0.5 text-[10px] font-black">LVL {{ getLevel(leaderboardService.topPlayers()[1].points) }}</div>
                   </div>
-                  <h3 class="text-xl font-black italic uppercase mb-1">{{ leaderboardService.topPlayers()[1].username }}</h3>
-                  <div class="text-primary font-bold text-sm tracking-tighter">SCORE: {{ leaderboardService.topPlayers()[1].points }}</div>
+                  <div class="w-full aspect-square bg-surface-bright mb-4 flex items-center justify-center border-2 border-dashed border-primary">
+                    <mat-icon class="text-6xl text-primary h-auto w-auto">robot_2</mat-icon>
+                  </div>
+                  <h3 class="text-xl font-black italic uppercase mb-1 truncate">{{ leaderboardService.topPlayers()[1].username }}</h3>
+                  <div class="text-[10px] font-black text-slate-500 mb-2 mt-1 tracking-widest">{{ getRankTitle(leaderboardService.topPlayers()[1].points) }}</div>
+                  <div class="text-primary font-bold text-sm tracking-tighter">XP: {{ leaderboardService.topPlayers()[1].points }}</div>
                 </div>
               }
 
@@ -61,15 +68,20 @@ import { SidebarComponent } from '../sidebar/sidebar.component';
                   <div class="absolute top-0 right-0 p-4 opacity-20">
                     <mat-icon class="text-9xl h-auto w-auto text-white">military_tech</mat-icon>
                   </div>
-                  <div class="text-6xl font-black italic mb-6 text-white drop-shadow-[4px_4px_0_#000]">#01</div>
-                  <div class="w-full aspect-square bg-black mb-6 flex items-center justify-center border-4 border-yellow-400 relative z-10">
-                    <div class="w-full h-full bg-primary/20 flex items-center justify-center">
-                      <mat-icon class="text-8xl text-yellow-400 h-auto w-auto">person</mat-icon>
+                  <div class="flex justify-between items-start mb-6 relative z-10">
+                    <div class="text-6xl font-black italic text-white drop-shadow-[4px_4px_0_#000]">#01</div>
+                    <div class="bg-yellow-400 text-black px-3 py-1 text-xs font-black shadow-[4px_4px_0_#000]">LVL {{ getLevel(leaderboardService.topPlayers()[0].points) }}</div>
+                  </div>
+                  <div class="w-full aspect-square bg-black mb-6 flex items-center justify-center border-4 border-yellow-400 relative z-10 overflow-hidden">
+                    <div class="absolute inset-0 bg-primary/20 animate-pulse"></div>
+                    <div class="w-full h-full flex items-center justify-center relative z-10">
+                      <mat-icon class="text-8xl text-yellow-400 h-auto w-auto">shield</mat-icon>
                     </div>
                   </div>
-                  <h3 class="text-3xl font-black italic uppercase mb-2 text-white relative z-10">{{ leaderboardService.topPlayers()[0].username }}</h3>
+                  <h3 class="text-3xl font-black italic uppercase mb-1 text-white relative z-10 truncate">{{ leaderboardService.topPlayers()[0].username }}</h3>
+                  <div class="text-xs font-black text-yellow-400 mb-3 relative z-10 tracking-[0.2em]">{{ getRankTitle(leaderboardService.topPlayers()[0].points) }}</div>
                   <div class="bg-yellow-400 text-black font-black px-3 py-1 inline-block text-lg relative z-10 tracking-widest">
-                    SCORE: {{ leaderboardService.topPlayers()[0].points }}
+                    XP: {{ leaderboardService.topPlayers()[0].points }}
                   </div>
                 </div>
               }
@@ -77,12 +89,16 @@ import { SidebarComponent } from '../sidebar/sidebar.component';
               <!-- Rank 3 -->
               @if (leaderboardService.topPlayers().length >= 3) {
                 <div class="order-3 bg-surface-container border-4 border-white p-6 hard-shadow-purple transition-transform hover:-translate-y-2 bg-[#111]">
-                  <div class="text-4xl font-black italic mb-4 text-white">#03</div>
+                  <div class="flex justify-between items-start mb-4">
+                    <div class="text-4xl font-black italic text-white">#03</div>
+                    <div class="bg-primary text-black px-2 py-0.5 text-[10px] font-black">LVL {{ getLevel(leaderboardService.topPlayers()[2].points) }}</div>
+                  </div>
                   <div class="w-full aspect-square bg-surface-bright mb-4 flex items-center justify-center border-2 border-dashed border-primary">
                     <mat-icon class="text-6xl text-primary h-auto w-auto">skull</mat-icon>
                   </div>
-                  <h3 class="text-xl font-black italic uppercase mb-1">{{ leaderboardService.topPlayers()[2].username }}</h3>
-                  <div class="text-primary font-bold text-sm tracking-tighter">SCORE: {{ leaderboardService.topPlayers()[2].points }}</div>
+                  <h3 class="text-xl font-black italic uppercase mb-1 truncate">{{ leaderboardService.topPlayers()[2].username }}</h3>
+                  <div class="text-[10px] font-black text-slate-500 mb-2 mt-1 tracking-widest">{{ getRankTitle(leaderboardService.topPlayers()[2].points) }}</div>
+                  <div class="text-primary font-bold text-sm tracking-tighter">XP: {{ leaderboardService.topPlayers()[2].points }}</div>
                 </div>
               }
             </section>
@@ -91,26 +107,34 @@ import { SidebarComponent } from '../sidebar/sidebar.component';
             <div class="space-y-4">
               <div class="grid grid-cols-12 gap-4 px-6 py-2 text-[10px] font-black uppercase text-primary tracking-[0.2em] border-b border-primary/20 pb-4">
                 <div class="col-span-1">RK</div>
-                <div class="col-span-7">OPERATOR_IDENTIFIER</div>
-                <div class="col-span-4 text-right">POINTS_MANIFESTED</div>
+                <div class="col-span-5">OPERATOR_ID</div>
+                <div class="col-span-3">RANK_STATUS</div>
+                <div class="col-span-1 text-center">LVL</div>
+                <div class="col-span-2 text-right">TOTAL_XP</div>
               </div>
 
               <!-- List Items -->
               @for (player of leaderboardService.topPlayers().slice(3); track player.uid; let i = $index) {
-                <div class="group relative bg-[#0d0d0d] border-4 border-white p-6 flex items-center justify-between hard-shadow-purple hover:bg-[#1a1a1a] transition-colors cursor-pointer active:translate-x-2 active:translate-y-2 active:shadow-none">
+                <div class="group relative bg-[#0d0d0d] border-4 border-white p-6 flex items-center justify-between hard-shadow-purple hover:bg-[#1a1a1a] transition-colors cursor-pointer active:translate-x-2 active:translate-y-2 active:shadow-none overflow-hidden">
                   <div class="grid grid-cols-12 gap-4 w-full items-center">
                     <div class="col-span-1 text-3xl font-black italic text-primary/80">
                       {{ (i + 4).toString().padStart(2, '0') }}
                     </div>
-                    <div class="col-span-7 flex items-center gap-4">
-                      <div class="w-10 h-10 bg-white p-1 border-2 border-black">
+                    <div class="col-span-5 flex items-center gap-4">
+                      <div class="w-10 h-10 bg-white p-1 border-2 border-black flex-shrink-0">
                         <div class="w-full h-full bg-primary/40 flex items-center justify-center">
                           <mat-icon class="text-black text-sm">person</mat-icon>
                         </div>
                       </div>
-                      <span class="font-black italic text-xl uppercase tracking-tighter">{{ player.username }}</span>
+                      <span class="font-black italic text-xl uppercase tracking-tighter truncate">{{ player.username }}</span>
                     </div>
-                    <div class="col-span-4 text-right font-black text-2xl tracking-tighter text-white">
+                    <div class="col-span-3 text-[10px] font-black text-slate-500 tracking-widest truncate">
+                      {{ getRankTitle(player.points) }}
+                    </div>
+                    <div class="col-span-1 text-center font-black">
+                      <span class="bg-primary/20 text-primary px-2 py-0.5 text-xs">L{{ getLevel(player.points) }}</span>
+                    </div>
+                    <div class="col-span-2 text-right font-black text-2xl tracking-tighter text-white">
                       {{ player.points }}
                     </div>
                   </div>
@@ -131,10 +155,22 @@ import { SidebarComponent } from '../sidebar/sidebar.component';
     .custom-scrollbar::-webkit-scrollbar-thumb { background: #b90df2; border: 2px solid #000; }
   `]
 })
-export class LeaderboardComponent implements OnInit {
+  export class LeaderboardComponent implements OnInit {
   leaderboardService = inject(LeaderboardService);
   authService = inject(AuthService);
 
   ngOnInit() {}
-// Force recompile 1773924700
+
+  getLevel(points: number = 0): number {
+    return Math.floor(points / 250) + 1;
+  }
+
+  getRankTitle(points: number = 0): string {
+    if (points >= 5000) return 'NEXUS_GRANDMASTER';
+    if (points >= 2500) return 'VOIDCROWNER';
+    if (points >= 1000) return 'CYBER_SENTINEL';
+    if (points >= 500) return 'ELITE_OPERATOR';
+    if (points >= 100) return 'RECRUIT_INITIATE';
+    return 'GHOST_USER';
+  }
 }
