@@ -47,7 +47,7 @@ import { SidebarComponent } from '../sidebar/sidebar.component';
                  </div>
                  <div>
                    <h3 class="text-2xl font-black uppercase leading-none">Mr Shiva Kumar</h3>
-                   <span class="text-primary font-bold text-xs">Project Lead & Mentor</span>
+                   <span class="text-primary font-bold text-xs">Faculty Advisor & Mentor</span>
                  </div>
               </div>
               <p class="text-xs font-bold leading-relaxed uppercase opacity-80">

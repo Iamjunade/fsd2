@@ -67,7 +67,7 @@ import { AuthService } from '../../services/auth.service';
 
     <div class="w-full bg-primary border-b-4 border-black overflow-hidden whitespace-nowrap py-2 relative z-[40]">
       <div class="marquee-content inline-block text-white font-black uppercase text-[10px] tracking-widest">
-        <span class="mx-4">FACULTY_GUIDANCE: MR SHIVA KUMAR (PROJECT LEAD & MENTOR)</span>
+        <span class="mx-4">FACULTY_GUIDANCE: MR SHIVA KUMAR (FACULTY ADVISOR)</span>
         <span class="mx-4 text-black">//</span>
         <span class="mx-4">TEAM: MOHAMMED JUNADE PASHA</span>
         <span class="mx-4 text-black">//</span>
@@ -81,7 +81,7 @@ import { AuthService } from '../../services/auth.service';
         <span class="mx-4 text-black">//</span>
         <span class="mx-4">SAMIKSHA</span>
         <span class="mx-4 text-black">***</span>
-        <span class="mx-4">FACULTY_GUIDANCE: MR SHIVA KUMAR (PROJECT LEAD & MENTOR)</span>
+        <span class="mx-4">FACULTY_GUIDANCE: MR SHIVA KUMAR (FACULTY ADVISOR)</span>
         <span class="mx-4 text-black">//</span>
         <span class="mx-4">TEAM: MOHAMMED JUNADE PASHA</span>
         <span class="mx-4 text-black">//</span>
