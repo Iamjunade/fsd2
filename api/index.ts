@@ -58,8 +58,8 @@ async function initDB() {
 
       CREATE TABLE IF NOT EXISTS contributions (
         id VARCHAR(255) PRIMARY KEY,
-        "experimentId" VARCHAR(255) REFERENCES experiments(id),
-        "userId" VARCHAR(255) REFERENCES users(uid),
+        "experimentId" VARCHAR(255),
+        "userId" VARCHAR(255),
         username VARCHAR(255) NOT NULL,
         type VARCHAR(50) NOT NULL,
         content TEXT NOT NULL,
@@ -69,8 +69,8 @@ async function initDB() {
 
       CREATE TABLE IF NOT EXISTS upvotes (
         id VARCHAR(255) PRIMARY KEY,
-        "userId" VARCHAR(255) REFERENCES users(uid),
-        "contributionId" VARCHAR(255) REFERENCES contributions(id),
+        "userId" VARCHAR(255),
+        "contributionId" VARCHAR(255),
         "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       );
     `);
