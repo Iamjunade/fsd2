@@ -3,7 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { getExperiment, Experiment } from '../services/experimentService';
 import { getContributionsByExperiment, addContribution, upvoteContribution, deleteContribution, updateContribution, Contribution } from '../services/contributionService';
 import { useAuth } from '../contexts/AuthContext';
-import { ChevronRight, FileText, MessageSquare, Code, Image as ImageIcon, ThumbsUp, Plus, X, Trash2, Hammer, Edit2 } from 'lucide-react';
+import { ChevronRight, FileText, MessageSquare, Code, Image as ImageIcon, ThumbsUp, Plus, X, Trash2, Hammer, Edit2, RefreshCw } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import ReactMarkdown from 'react-markdown';
 import { formatDistanceToNow } from 'date-fns';
@@ -19,15 +19,30 @@ export const ExperimentDetails: React.FC = () => {
   const [contributions, setContributions] = useState<Contribution[]>([]);
   const [activeTab, setActiveTab] = useState('overview');
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const { user, profile } = useAuth();
 
   const [showContributeModal, setShowContributeModal] = useState(false);
   const [contributionContent, setContributionContent] = useState('');
   const [contributionType, setContributionType] = useState<'note' | 'solution' | 'code' | 'diagram' | 'comment'>('note');
+  const [contributionError, setContributionError] = useState<string | null>(null);
 
   const [editingContributionId, setEditingContributionId] = useState<string | null>(null);
   const [editContent, setEditContent] = useState('');
   const [editType, setEditType] = useState<'note' | 'solution' | 'code' | 'diagram' | 'comment'>('note');
+
+  const fetchContributions = async (isRefreshing = false) => {
+    if (!experimentId) return;
+    if (isRefreshing) setRefreshing(true);
+    try {
+      const contribs = await getContributionsByExperiment(experimentId);
+      setContributions(contribs);
+    } catch (error) {
+      console.error('Error fetching contributions:', error);
+    } finally {
+      if (isRefreshing) setRefreshing(false);
+    }
+  };
 
   useEffect(() => {
     const fetchExperimentData = async () => {
@@ -35,8 +50,7 @@ export const ExperimentDetails: React.FC = () => {
       try {
         const exp = await getExperiment(experimentId);
         setExperiment(exp);
-        const contribs = await getContributionsByExperiment(experimentId);
-        setContributions(contribs);
+        await fetchContributions();
       } catch (error) {
         console.error('Error fetching experiment:', error);
       } finally {
@@ -45,6 +59,20 @@ export const ExperimentDetails: React.FC = () => {
     };
     fetchExperimentData();
   }, [experimentId]);
+
+  // Polling mechanism for real-time sync
+  useEffect(() => {
+    if (activeTab !== 'contributions' || !experimentId) return;
+
+    const intervalId = setInterval(() => {
+      // Only poll if window is focused/visible to save resources
+      if (!document.hidden) {
+        fetchContributions();
+      }
+    }, 15000); // 15 seconds
+
+    return () => clearInterval(intervalId);
+  }, [activeTab, experimentId]);
 
   const handleContribute = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -61,8 +89,10 @@ export const ExperimentDetails: React.FC = () => {
       setContributions([newContrib, ...contributions]);
       setShowContributeModal(false);
       setContributionContent('');
-    } catch (error) {
+      setContributionError(null);
+    } catch (error: any) {
       console.error('Error adding contribution:', error);
+      setContributionError(error.message || 'Failed to post contribution. Please try again.');
     }
   };
 
@@ -206,7 +236,17 @@ export const ExperimentDetails: React.FC = () => {
           <div className="animate-in fade-in duration-300 space-y-6">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-xl font-bold text-indigo-400">Community Contributions</h2>
-              <span className="text-sm text-slate-400">{contributions.length} contributions</span>
+              <div className="flex items-center space-x-4">
+                <span className="text-sm text-slate-400">{contributions.length} contributions</span>
+                <button 
+                  onClick={() => fetchContributions(true)}
+                  disabled={refreshing}
+                  className="p-2 text-slate-400 hover:text-indigo-400 hover:bg-slate-800 rounded-lg transition-colors disabled:opacity-50"
+                  title="Refresh contributions"
+                >
+                  <RefreshCw size={18} className={refreshing ? "animate-spin" : ""} />
+                </button>
+              </div>
             </div>
 
             {contributions.length === 0 ? (
@@ -344,6 +384,15 @@ export const ExperimentDetails: React.FC = () => {
                     </p>
                   </div>
                 )}
+                
+                {contributionError && (
+                  <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-4 mb-4">
+                    <p className="text-sm text-red-400">
+                      {contributionError}
+                    </p>
+                  </div>
+                )}
+                
                 <div>
                   <label className="block text-sm font-medium text-slate-400 mb-2">Contribution Type</label>
                   <div className="flex flex-wrap gap-2">
