@@ -8,8 +8,6 @@ import { createServer as createViteServer } from 'vite';
 
 dotenv.config();
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = 3000;
@@ -26,8 +24,9 @@ const pool = new Pool({
 
 // Initialize DB
 async function initDB() {
-  const client = await pool.connect();
+  let client;
   try {
+    client = await pool.connect();
     await client.query(`
       CREATE TABLE IF NOT EXISTS users (
         uid VARCHAR(255) PRIMARY KEY,
@@ -85,7 +84,7 @@ async function initDB() {
   } catch (err) {
     console.error('Error initializing DB:', err);
   } finally {
-    client.release();
+    if (client) client.release();
   }
 }
 
