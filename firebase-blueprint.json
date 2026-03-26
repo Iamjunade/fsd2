@@ -1,0 +1,103 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "A user of the platform (student or admin)",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "username": { "type": "string" },
+        "email": { "type": "string" },
+        "role": { "type": "string", "enum": ["student", "admin"] },
+        "points": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "username", "email", "role", "points", "createdAt"]
+    },
+    "Lab": {
+      "title": "Lab",
+      "description": "An engineering laboratory",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "code": { "type": "string" },
+        "name": { "type": "string" },
+        "iconName": { "type": "string" },
+        "color": { "type": "string" },
+        "bg": { "type": "string" },
+        "group": { "type": "string" },
+        "order": { "type": "number" }
+      },
+      "required": ["id", "code", "name", "iconName", "color", "bg", "group", "order"]
+    },
+    "Experiment": {
+      "title": "Experiment",
+      "description": "A weekly experiment for a lab",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "labId": { "type": "string" },
+        "weekNumber": { "type": "number" },
+        "title": { "type": "string" },
+        "aim": { "type": "string" },
+        "theory": { "type": "string" },
+        "procedure": { "type": "string" },
+        "materials": { "type": "string" },
+        "observations": { "type": "string" },
+        "result": { "type": "string" },
+        "vivaQuestions": { "type": "string" }
+      },
+      "required": ["id", "labId", "weekNumber", "title", "aim", "theory", "procedure", "materials", "observations", "result", "vivaQuestions"]
+    },
+    "Contribution": {
+      "title": "Contribution",
+      "description": "A user contribution to an experiment",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "experimentId": { "type": "string" },
+        "userId": { "type": "string" },
+        "username": { "type": "string" },
+        "content": { "type": "string" },
+        "fileUrl": { "type": "string" },
+        "type": { "type": "string", "enum": ["note", "solution", "code", "diagram", "comment"] },
+        "upvotes": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "experimentId", "userId", "username", "content", "type", "upvotes", "createdAt"]
+    },
+    "Upvote": {
+      "title": "Upvote",
+      "description": "Tracks which user upvoted which contribution",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "contributionId": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "contributionId", "createdAt"]
+    }
+  },
+  "firestore": {
+    "users/{userId}": {
+      "schema": { "$ref": "#/entities/User" },
+      "description": "User profiles and points"
+    },
+    "labs/{labId}": {
+      "schema": { "$ref": "#/entities/Lab" },
+      "description": "List of engineering labs"
+    },
+    "experiments/{experimentId}": {
+      "schema": { "$ref": "#/entities/Experiment" },
+      "description": "Experiments for each lab"
+    },
+    "contributions/{contributionId}": {
+      "schema": { "$ref": "#/entities/Contribution" },
+      "description": "User contributions to experiments"
+    },
+    "upvotes/{upvoteId}": {
+      "schema": { "$ref": "#/entities/Upvote" },
+      "description": "Tracks upvotes to prevent multiple votes"
+    }
+  }
+}
